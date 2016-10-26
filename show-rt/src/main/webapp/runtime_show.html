@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<head>
+    <title>STAT - Runtime - Show - based on WebSocket </title>
+
+    <script src="amaze/assets/js/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        var ws = null;
+        var url = 'ws://' + window.location.host + '/show-rt/websock/init.htm';
+        
+        $(function(){
+        	window.opener.postMessage({action:'init'},'*');
+        	self.addEventListener("message", function(event) { 
+    			statObj = event.data;
+    			connect();
+    		}, false);
+        });
+
+        function connect() {
+            ws = new WebSocket(url);
+
+            ws.onopen = function () {
+            	console.log('sxjiang');
+            	chartInit();
+            	ws.send(statObj.queueName);
+            };
+            ws.onmessage = function (event) {
+            	console.log(event.data);
+                drawOnce($.parseJSON(event.data));
+            };
+            ws.onclose = function (event) {
+            	
+            };
+        }
+
+        function disconnect() {
+            if (ws != null) {
+                ws.close();
+                ws = null;
+            }
+        }
+
+    </script>
+</head>
+<body>
+<div id="main" style="height:700px"></div>
+</body>
+<script src="http://echarts.baidu.com/dist/echarts.min.js"></script> 
+<script type="text/javascript">
+        
+        	function chartInit(){
+        		 // 基于准备好的dom，初始化echarts图表
+                myChart = echarts.init(document.getElementById('main')); 
+                 
+                 option = {
+                		    title: {
+                		        text: 'statName='+statObj.queueName+',groupKey='+statObj.groupKey+',valueKey='+statObj.valueKey
+                		    },
+                		    tooltip : {
+                		        trigger: 'axis'
+                		    },
+                		    legend: {
+                		        data:[]
+                		    },
+                		    toolbox: {
+                		        feature: {
+                		            saveAsImage: {}
+                		        }
+                		    },
+                		    grid: {
+                		        left: '3%',
+                		        right: '4%',
+                		        bottom: '3%',
+                		        containLabel: true
+                		    },
+                		    xAxis : [
+                		        {
+                		            type : 'category',
+                		            boundaryGap : false,
+                		            data : []
+                		        }
+                		    ],
+                		    yAxis : [
+                		        {
+                		            type : 'value'
+                		        }
+                		    ],
+                		    series : [
+                		    ]
+                		};
+        	}
+               
+        	var timeCount = 0;
+                 function drawOnce(jsonObj){
+                	 console.log(jsonObj.statName);
+                	 var timeValueMap = jsonObj.timeValueMap;
+                	 var groupKey = statObj.groupKey;
+                	 var column = statObj.valueKey;
+                	 
+                	 for(var k in timeValueMap){
+                		 var xValue = k;
+                    	 var xIndex = option.xAxis[0].data.indexOf(xValue);
+                    	 if(xIndex == -1){
+                    		 option.xAxis[0].data.push(k);
+                    		 timeCount++;
+                    	 }
+	                	 
+	                	 var index = option.legend.data.indexOf(timeValueMap[k][groupKey]);
+	                	 if(index == -1){
+	                		 option.legend.data.push(timeValueMap[k][groupKey]);
+	                		//补零
+	                		 var firstVal = [];
+	                		 if(timeCount > 1){
+	                			 for(var kk=0;kk<timeCount-1;kk++){
+	                				 firstVal.push('0');
+	                			 }
+	                		 }
+	                		 firstVal.push(timeValueMap[k][column]);
+	                		 option.series.push({
+	          		            name:timeValueMap[k][groupKey],
+	         		            type:'line',
+	         		            areaStyle: {normal: {opacity:0}},
+	         		            data:firstVal
+	         		        });
+	                	 }else{
+	                		//补零
+		                	 if(option.series[index].data.length < timeCount - 1){
+		                		 for(var ii=0;ii<timeCount - 1 - option.series[index].data.length;ii++){
+		                			 option.series[index].data.push('0');
+		                		 }
+		                	 }
+	                		 option.series[index].data.push(timeValueMap[k][column]);
+	                	 }
+                	 }
+                	 myChart.setOption(option);
+                 }
+    </script>
+</html>

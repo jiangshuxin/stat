@@ -1,0 +1,385 @@
+<!doctype html>
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>99wuxian real-time computing</title>
+  <meta name="description" content="实时计算任务列表">
+  <meta name="keywords" content="real-time computing">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="icon" type="image/png" href="amaze/assets/i/favicon.png">
+  <link rel="apple-touch-icon-precomposed" href="amaze/assets/i/app-icon72x72@2x.png">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+  <link href="http://cdn.bootcss.com/twitter-bootstrap/2.2.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/prettify/r224/prettify.css" rel="stylesheet">
+  <link rel="stylesheet" href="amaze/assets/css/amazeui.min.css"/>
+  <link rel="stylesheet" href="amaze/assets/css/admin.css">
+  <link rel="stylesheet" href="amaze/assets/css/bootstrap-datetimepicker.min.css">
+</head>
+<body>
+<!--[if lte IE 9]>
+<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
+  以获得更好的体验！</p>
+<![endif]-->
+
+<header class="am-topbar am-topbar-inverse admin-header">
+  <div class="am-topbar-brand">
+    <strong>99WUXIAN </strong> <small>实时计算管理平台</small>
+  </div>
+
+  <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
+
+  <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+
+    <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
+      <li><a href="javascript:;"><span class="am-icon-envelope-o"></span> 收件箱 <span class="am-badge am-badge-warning">5</span></a></li>
+      <li class="am-dropdown" data-am-dropdown>
+        <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+          <span class="am-icon-users"></span> 管理员 <span class="am-icon-caret-down"></span>
+        </a>
+        <ul class="am-dropdown-content">
+          <li><a href="#"><span class="am-icon-user"></span> 资料</a></li>
+          <li><a href="#"><span class="am-icon-cog"></span> 设置</a></li>
+          <li><a href="#"><span class="am-icon-power-off"></span> 退出</a></li>
+        </ul>
+      </li>
+      <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen"><span class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a></li>
+    </ul>
+  </div>
+</header>
+
+<div class="am-cf admin-main">
+
+  <!-- content start -->
+  <div class="admin-content">
+    <div class="admin-content-body">
+      <div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">计算管理</strong> / <small>实时计算任务列表</small></div>
+      </div>
+
+      <hr>
+
+      <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-6">
+          <div class="am-btn-toolbar">
+            <div class="am-btn-group am-btn-group-xs">
+              <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</button>
+              <button type="button" class="am-btn am-btn-default"><span class="am-icon-save"></span> 保存</button>
+              <button type="button" class="am-btn am-btn-default"><span class="am-icon-archive"></span> 审核</button>
+              <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
+            </div>
+          </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-3">
+          <div class="am-input-group am-input-group-sm">
+            <input type="text" class="am-form-field">
+          <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" type="button">搜索</button>
+          </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="am-g">
+        <div class="am-u-sm-12">
+        	<form class="am-form" onsubmit="javascript:return false;">
+				<table
+					class="am-table am-table-bd am-table-striped admin-content-table"
+					id="dataTable">
+					<thead>
+						<tr>
+							<th name="name">名称</th>
+							<th name="topic">主题</th>
+							<th name="resultTopic">结果主题</th>
+							<th name="tableClass" >输入类型</th>
+							<th name="resultClass" >输出类型</th>
+							<th name="batchDuration">输出时间间隔</th>
+							<th name="slideDuration">滑动时间间隔</th>
+							<th name="windowDuration">窗口时间间隔</th>
+							<th name="groupKey">分组键</th>
+							<th name="valueKeyList">展示项名称</th>
+							<th name="operation">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</form>
+			
+        </div>
+
+      </div>
+    </div>
+
+			<div class="am-modal am-modal-no-btn" tabindex="-1" id="runtime-modal">
+				<div class="am-modal-dialog">
+					<div class="am-modal-hd">
+						选择展示项 <a href="javascript: void(0)" class="am-close am-close-spin"
+							data-am-modal-close>&times;</a>
+					</div>
+					<div class="am-modal-bd">
+						<select data-am-selected id="valueKeySelR">
+						</select>
+					</div>
+					<div class="am-modal-bd">
+						<button class="am-btn am-btn-primary am-btn-xs" onclick="javascript:generate()">生成</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="am-modal am-modal-no-btn" tabindex="-1" id="history-modal">
+				<div class="am-modal-dialog">
+					<div class="am-modal-hd">
+						选择展示项 <a href="javascript: void(0)" class="am-close am-close-spin"
+							data-am-modal-close>&times;</a>
+					</div>
+					<div class="am-modal-bd">
+						<select data-am-selected id="valueKeySelH">
+						</select>
+					</div>
+					<div class="am-g">
+					<div class="am-u-sm-6">
+					    <label class="am-radio">
+					      <input type="radio" name="radio1" value="date" data-am-ucheck checked="checked" checked onclick="radioCheck()">
+					      日期选择
+					    </label>
+					    <label class="am-radio">
+					      <input type="radio" name="radio1" value="block" data-am-ucheck onclick="radioCheck()">
+					      区间选择
+					    </label>
+					  </div>
+					  </div>
+					  
+<div class="am-g" id="dateSel">
+  <div class="am-u-sm-6">
+    日期<input class="" data-am-datepicker="{format: 'yyyy-mm-dd'}" id="datepicker" readonly/>
+  </div>
+</div>
+<div class="am-g" id="blockSel" style="display: none">
+  <div class="am-u-sm-6">
+    开始<input size="16" type="text" value="2016-09-05 10:45:00" readonly class="form_datetime">
+  </div>
+  <div class="am-u-sm-6">
+    结束<input size="16" type="text" value="2016-09-05 14:45:00" readonly class="form_datetime">
+  </div>
+</div>
+
+					  
+					<div class="am-modal-bd">
+						<button class="am-btn am-btn-primary am-btn-xs" onclick="javascript:generate()">生成</button>
+					</div>
+				</div>
+			</div>
+
+			<footer class="admin-content-footer">
+      <hr>
+      <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+    </footer>
+
+  </div>
+  <!-- content end -->
+</div>
+
+<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
+
+<footer>
+  <hr>
+  <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+</footer>
+
+<!--[if lt IE 9]>
+<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script src="amaze/assets/js/amazeui.ie8polyfill.min.js"></script>
+<![endif]-->
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="amaze/assets/js/jquery.min.js"></script>
+<!--<![endif]-->
+<script src="amaze/assets/js/amazeui.min.js"></script>
+<script src="amaze/assets/js/amazeui.datatables.js"></script>
+<script src="amaze/assets/js/app.js"></script>
+<script src="amaze/assets/js/bootstrap-datetimepicker.min.js"></script>
+<script src="amaze/assets/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+<script type="text/javascript">
+	var pagination = {
+		page : 1,
+		pagesize : 10
+	};
+	
+	var statObj = {
+		name:'',
+		groupKey:'',
+		openType:''
+	}
+	
+	function radioCheck(){
+		var rVal = $('input[name="radio1"]:checked').val();console.log(rVal);
+		if(rVal == 'date'){
+			$('#dateSel').show();
+			$('#blockSel').hide();
+		}else{
+			$('#dateSel').hide();
+			$('#blockSel').show();
+		}
+	}
+
+	function generate(){
+		if(statObj.openType == 'runtime'){
+			targetWin = window.open('/show-rt/runtime_show.html');
+		}else if(statObj.openType == 'history'){
+			var rType = $('input[name="radio1"]:checked').val();
+			if(rType == 'date'){
+				statObj.timeType = 'date';
+				statObj.date = $('#datepicker').val();
+			}else if(rType == 'block'){
+				statObj.timeType = 'block';
+				statObj.block1 = $('.form_datetime:eq(0)').val();
+				statObj.block2 = $('.form_datetime:eq(1)').val();
+			}
+			targetWin = window.open('/show-rt/history_show.html');
+		}
+		$modal.modal('close');
+	}
+
+	function viewDetail(target,name){
+		$(target).popover({
+		    content: name
+		  })
+	}
+	
+	function viewRuntime(target,valueKeyList,name,groupKey){
+		statObj.name = name;
+		statObj.groupKey = groupKey;
+		statObj.openType = 'runtime';
+		$('#valueKeySelR').empty();
+		valueKeyList = valueKeyList.split(',');
+		for(var k in valueKeyList){
+			$('#valueKeySelR').append('<option value="'+valueKeyList[k]+'">' + valueKeyList[k] + '</option>');
+		}
+		$modal = $('#runtime-modal');
+		$modal.modal();
+	}
+	
+	function viewHistory(target,valueKeyList,name,groupKey){
+		statObj.name = name;
+		statObj.groupKey = groupKey;
+		statObj.openType = 'history';
+		$('#valueKeySelH').empty();
+		valueKeyList = valueKeyList.split(',');
+		for(var k in valueKeyList){
+			$('#valueKeySelH').append('<option value="'+valueKeyList[k]+'">' + valueKeyList[k] + '</option>');
+		}
+		$modal = $('#history-modal');
+		$modal.modal();
+	}
+
+	$(document).ready(function() {
+		$(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii:ss',language:'zh-CN',
+	        autoclose: true,
+	        todayBtn: true,
+	        startDate: "2016-08-14 10:00:00",
+	        minuteStep: 10});
+		
+		loadDataTable(
+				"/service-rt/stat/stats.json",
+				pagination, 'dataTable');
+		
+		self.addEventListener("message", function(event) { 
+			var data = event.data;
+			if(data.action == 'init'){
+				if(statObj.openType == 'runtime'){
+					statObj.valueKey = $('#valueKeySelR').val();
+				}else if(statObj.openType == 'history'){
+					statObj.valueKey = $('#valueKeySelH').val();
+				}
+				statObj.queueName = 'stat-runtime-result-'+statObj.name;
+				targetWin.postMessage(statObj,'*');
+			}
+		}, false);
+	});
+
+	function loadDataTable(url, params, tableId) {
+		actDataTable = $('#' + tableId)
+				.DataTable(
+						{
+							"ajax" : {
+								"url" : url,
+								"contentType" : "application/x-www-form-urlencoded",
+								"method" : "post",
+								"data" : function(d) {
+								}
+							},
+							"columns" : [ 
+							{
+								"data" : 'name'
+							}, {
+								"data" : 'topic'
+							}, {
+								"data" : 'resultTopic'
+							},//key
+							{
+								"data" : 'tableClass'
+							}, {
+								"data" : 'resultClass'
+							},//key
+							{
+								"data" : 'batchDuration'
+							}, 
+							{
+								"data" : 'slideDuration'
+							}, 
+							{
+								"data" : 'windowDuration'
+							},
+							{
+								"data" : 'groupKey'
+							},
+							{
+								"data" : 'valueKeyList'
+							},
+							],
+							"columnDefs" : [
+											{
+												"render" : function(data, type, row,index){
+													var btnArr = [
+													              '<table><tr>',
+													              '<td><button class="am-btn am-btn-xs" onclick="javascript:viewDetail(this,\''+row.name+'\')">详情</button></td>',
+													              '<td><button class="am-btn am-btn-primary am-btn-xs" onclick="javascript:viewRuntime(this,\''+row.valueKeyList+'\',\''+row.name+'\',\''+row.groupKey+'\')">实时数据展示</button></td>',
+													              '<td><button class="am-btn am-btn-secondary am-btn-xs" onclick="javascript:viewHistory(this,\''+row.valueKeyList+'\',\''+row.name+'\',\''+row.groupKey+'\')">历史数据展示</button></td>',
+													              '</tr></table>'
+													              ];
+													return btnArr.join('\n');
+												},
+												"targets" : 10
+											},
+											{
+												"searchable" : true,
+												"orderable" : true,
+												"targets" : [ 0, 1, 2,5,6 ]
+											},
+											{
+												"targets": [ 3,4 ],
+								                "visible": false,
+								                "searchable": false
+											}
+									// { "visible": false,  "targets": [ 3,6 ] } 
+									],
+						});
+
+		/* actDataTable.on('order.dt search.dt', function() {
+			actDataTable.column(0, {
+				search : 'applied',
+				order : 'applied'
+			}).nodes().each(function(cell, i) {
+				cell.innerHTML = i + 1;
+			});
+		}).draw(); */
+
+	}
+</script>
+</body>
+</html>

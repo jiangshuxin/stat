@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<head>
+    <title>STAT - History - Show - based on WebSocket </title>
+
+    <script src="amaze/assets/js/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(function(){
+        	window.opener.postMessage({action:'init'},'*');
+        	self.addEventListener("message", function(event) { 
+    			statObj = event.data;
+    			chartInit();
+   				console.log(statObj.block1+'   '+statObj.block2);
+   				var params = {statName:statObj.name};
+   				if(statObj.timeType == 'date'){
+   					params.day = statObj.date;
+   				}else if(statObj.timeType == 'block'){
+   					params.fromDate = statObj.block1;
+   					params.toDate = statObj.block2;
+   				}
+    			$.post('/service-rt/stat/timeValueSet.json',params,function(result){
+    				for(var k in result){
+    					console.log(result[k]);
+		    			drawOnce(result[k]);
+    				}
+    				myChart.setOption(option);
+    			});
+    		}, false);
+        });
+
+    </script>
+</head>
+<body>
+<div id="main" style="height:700px"></div>
+</body>
+<script src="http://echarts.baidu.com/dist/echarts.min.js"></script> 
+<script type="text/javascript">
+        
+        	function chartInit(){
+        		 // 基于准备好的dom，初始化echarts图表
+                myChart = echarts.init(document.getElementById('main')); 
+                 
+                 option = {
+                		    title: {
+                		        text: 'statName='+statObj.name+',groupKey='+statObj.groupKey+',valueKey='+statObj.valueKey
+                		    },
+                		    tooltip : {
+                		        trigger: 'axis'
+                		    },
+                		    legend: {
+                		        data:[]
+                		    },
+                		    toolbox: {
+                		        feature: {
+                		            saveAsImage: {}
+                		        }
+                		    },
+                		    grid: {
+                		        left: '3%',
+                		        right: '4%',
+                		        bottom: '3%',
+                		        containLabel: true
+                		    },
+                		    xAxis : [
+                		        {
+                		            type : 'category',
+                		            boundaryGap : false,
+                		            data : []
+                		        }
+                		    ],
+                		    yAxis : [
+                		        {
+                		            type : 'value'
+                		        }
+                		    ],
+                		    series : [
+                		    ]
+                		};
+        	}
+               
+			var timeCount = 0;
+                 function drawOnce(jsonObj){
+                	 var groupKey = statObj.groupKey;
+                	 var column = statObj.valueKey;
+                	 
+                	 var xValue = jsonObj['hhmmss'];
+                	 var xIndex = option.xAxis[0].data.indexOf(xValue);
+                	 if(xIndex == -1){
+	                	 option.xAxis[0].data.push(xValue);
+	                	 timeCount++;
+                	 }
+                	 var index = option.legend.data.indexOf(jsonObj[groupKey]);
+                	 if(index == -1){
+                		 option.legend.data.push(jsonObj[groupKey]);
+                		 //补零
+                		 var firstVal = [];
+                		 if(timeCount > 1){
+                			 for(var kk=0;kk<timeCount-1;kk++){
+                				 firstVal.push('0');
+                			 }
+                		 }
+                		 firstVal.push(jsonObj[column]);
+                		 option.series.push({
+          		            name:jsonObj[groupKey],
+         		            type:'line',
+         		            areaStyle: {normal: {opacity:0}},
+         		            data:firstVal
+         		        });
+                	 }else{
+                		//补零
+	                	 if(option.series[index].data.length < timeCount - 1){
+	                		 for(var ii=0;ii<timeCount - 1 - option.series[index].data.length;ii++){
+	                			 option.series[index].data.push('0');
+	                		 }
+	                	 }
+	               		 option.series[index].data.push(jsonObj[column]);
+                	 }
+                 }
+    </script>
+</html>
