@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ImportResource;
  */
 
 @SpringBootApplication
-@ImportResource(locations = {"classpath:spring/spring-context", "classpath:spring/spring-web.xml"})
+@ImportResource(locations = {"classpath:spring/spring-context.xml", "classpath:spring/spring-web.xml"})
 public class ShowApplication {
 
     public static void main(String[] args) {

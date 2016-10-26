@@ -1,5 +1,6 @@
-package com.handpay.arch.stat.chart;
+package com.handpay.arch.stat.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -15,18 +16,15 @@ import com.handpay.arch.stat.handler.StatResultHandler;
 @EnableWebMvc
 @EnableWebSocket
 public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfigurer {
+	@Autowired
+	private StatResultHandler statResultHandler;
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 
-		registry.addHandler(buildStatResultHandler(), "/websock/init");
+		registry.addHandler(statResultHandler, "/websock/init");
 		//registry.addHandler(echoWebSocketHandler(), "/sockjs/echo-issue4").withSockJS().setHttpMessageCacheSize(20000);
 
-	}
-	
-	@Bean
-	public StatResultHandler buildStatResultHandler(){
-		return null;
 	}
 	
 	// Allow serving HTML files through the default Servlet
