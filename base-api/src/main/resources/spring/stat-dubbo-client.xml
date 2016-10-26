@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:registry id="stat-service-reg" protocol="${dubbo.registry.protocol}"
+		address="${dubbo.registry.address}" file="${user.home}/.dubbo-cache/stat-service-rt-dubbo-reg"
+		group="dubbo-online" check="false" default="false" />
+
+	<dubbo:reference id="streamProvider"
+		interface="com.handpay.arch.stat.provider.StreamProvider"
+		version="1.0.0" registry="stat-service-reg" />
+</beans>
