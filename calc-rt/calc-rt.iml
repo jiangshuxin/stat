@@ -199,6 +199,7 @@
     <orderEntry type="library" name="Maven: org.apache.hadoop:hadoop-yarn-common:2.2.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.inject:guice:3.0" level="project" />
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
+    <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
     <orderEntry type="library" name="Maven: com.sun.jersey.jersey-test-framework:jersey-test-framework-grizzly2:1.9" level="project" />
     <orderEntry type="library" name="Maven: com.sun.jersey.jersey-test-framework:jersey-test-framework-core:1.9" level="project" />
     <orderEntry type="library" name="Maven: javax.servlet:javax.servlet-api:3.0.1" level="project" />
@@ -278,12 +279,11 @@
     <orderEntry type="library" name="Maven: com.github.stephenc:jamm:0.2.5" level="project" />
     <orderEntry type="library" name="Maven: com.github.scopt:scopt_2.10:3.2.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.scala-lang:scala-library:2.10.5" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-core:4.0.1.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-context:4.0.1.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-aop:4.0.1.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-expression:4.0.1.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-beans:4.0.1.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-core:4.3.3.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-context:4.3.3.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-aop:4.3.3.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-expression:4.3.3.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-beans:4.3.3.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.spark-project.spark:unused:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.scalatest:scalatest_2.10:2.2.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.scala-lang:scala-reflect:2.10.5" level="project" />
