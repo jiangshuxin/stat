@@ -1,4 +1,4 @@
-package com.handpay.arch.stat.config;
+package com.handpay.arch.stat.chart;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
