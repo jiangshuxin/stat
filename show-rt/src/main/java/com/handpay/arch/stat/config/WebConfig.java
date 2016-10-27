@@ -1,3 +1,4 @@
+/*
 package com.handpay.arch.stat.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,3 +36,4 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfi
 	}
 
 }
+*/

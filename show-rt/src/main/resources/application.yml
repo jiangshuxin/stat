@@ -1,0 +1,7 @@
+server:
+  context-path: /showrt
+  port: 8080
+
+spring:
+  resources:
+    static-locations:classpath:/resources/, classpath:/static/

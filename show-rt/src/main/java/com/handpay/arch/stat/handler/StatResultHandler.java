@@ -24,6 +24,8 @@ public class StatResultHandler extends TextWebSocketHandler {
 
 	@Override
 	public void handleTextMessage(final WebSocketSession session, final TextMessage message) throws Exception {
+		System.out.println("test ..................");
+
 		session.sendMessage(new TextMessage(JSON.toJSONString(ResultVO.buildSucResult())));
 		
 		stringRedisTemplateX.execute(new RedisCallback<String>() {
