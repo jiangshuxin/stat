@@ -1,5 +1,5 @@
 server:
-  context-path: /showrt
+  context-path: /show-rt
   port: 8080
 
 spring:

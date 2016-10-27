@@ -1,0 +1,208 @@
+<!doctype html>
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>99wuxian real-time computing</title>
+  <meta name="description" content="数据驱动-图表列表">
+  <meta name="keywords" content="real-time computing">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="icon" type="image/png" href="amaze/assets/i/favicon.png">
+  <link rel="apple-touch-icon-precomposed" href="amaze/assets/i/app-icon72x72@2x.png">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+  <link href="http://cdn.bootcss.com/twitter-bootstrap/2.2.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/prettify/r224/prettify.css" rel="stylesheet">
+  <link rel="stylesheet" href="amaze/assets/css/amazeui.min.css"/>
+  <link rel="stylesheet" href="amaze/assets/css/admin.css">
+  <link rel="stylesheet" href="amaze/assets/css/bootstrap-datetimepicker.min.css">
+</head>
+<body>
+<!--[if lte IE 9]>
+<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
+  以获得更好的体验！</p>
+<![endif]-->
+
+<header class="am-topbar am-topbar-inverse admin-header">
+  <div class="am-topbar-brand">
+    <strong>99WUXIAN </strong> <small>数据驱动-图表列表</small>
+  </div>
+
+  <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
+
+  <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+
+    <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
+      <li><a href="javascript:;"><span class="am-icon-envelope-o"></span> 收件箱 <span class="am-badge am-badge-warning">5</span></a></li>
+      <li class="am-dropdown" data-am-dropdown>
+        <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+          <span class="am-icon-users"></span> 管理员 <span class="am-icon-caret-down"></span>
+        </a>
+        <ul class="am-dropdown-content">
+          <li><a href="#"><span class="am-icon-user"></span> 资料</a></li>
+          <li><a href="#"><span class="am-icon-cog"></span> 设置</a></li>
+          <li><a href="#"><span class="am-icon-power-off"></span> 退出</a></li>
+        </ul>
+      </li>
+      <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen"><span class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a></li>
+    </ul>
+  </div>
+</header>
+
+<div class="am-cf admin-main">
+
+  <!-- content start -->
+  <div class="admin-content">
+    <div class="admin-content-body">
+      <div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">计算管理</strong> / <small>实时计算任务列表</small></div>
+      </div>
+
+      <hr>
+
+      <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-6">
+          <div class="am-btn-toolbar">
+            <div class="am-btn-group am-btn-group-xs">
+              <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</button>
+              <button type="button" class="am-btn am-btn-default"><span class="am-icon-save"></span> 保存</button>
+              <button type="button" class="am-btn am-btn-default"><span class="am-icon-archive"></span> 审核</button>
+              <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
+            </div>
+          </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-3">
+          <div class="am-input-group am-input-group-sm">
+            <input type="text" class="am-form-field">
+          <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" type="button">搜索</button>
+          </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="am-g">
+        <div class="am-u-sm-12">
+        	<form class="am-form" onsubmit="javascript:return false;">
+				<table
+					class="am-table am-table-bd am-table-striped admin-content-table"
+					id="dataTable">
+					<thead>
+						<tr>
+							<th name="name">名称</th>
+							<th name="type">类型</th>
+							<th name="url">数据url</th>
+							<th name="saved" >是否保存</th>
+							<th name="interval" >间隔时间</th>
+							<th name="operation">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</form>
+			
+        </div>
+
+      </div>
+    </div>
+
+
+			<footer class="admin-content-footer">
+      <hr>
+      <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+    </footer>
+
+  </div>
+  <!-- content end -->
+</div>
+
+<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
+
+<footer>
+  <hr>
+  <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+</footer>
+
+<!--[if lt IE 9]>
+<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script src="amaze/assets/js/amazeui.ie8polyfill.min.js"></script>
+<![endif]-->
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="amaze/assets/js/jquery.min.js"></script>
+<!--<![endif]-->
+<script src="amaze/assets/js/amazeui.min.js"></script>
+<script src="amaze/assets/js/amazeui.datatables.js"></script>
+<script src="amaze/assets/js/app.js"></script>
+<script src="amaze/assets/js/bootstrap-datetimepicker.min.js"></script>
+<script src="amaze/assets/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+<script type="text/javascript">
+	var pagination = {
+		page : 1,
+		pagesize : 10
+	};
+	
+	$(document).ready(function() {
+
+		loadDataTable(
+				"/show-rt/chart/list",
+				pagination, 'dataTable');
+		
+		self.addEventListener("message", function(event) { 
+			var data = event.data;
+//			if(data.action == 'init'){
+//				if(statObj.openType == 'runtime'){
+//					statObj.valueKey = $('#valueKeySelR').val();
+//				}else if(statObj.openType == 'history'){
+//					statObj.valueKey = $('#valueKeySelH').val();
+//				}
+//				statObj.queueName = 'stat-runtime-result-'+statObj.name;
+//				targetWin.postMessage(statObj,'*');
+//			}
+		}, false);
+	});
+
+	function loadDataTable(url, params, tableId) {
+		actDataTable = $('#' + tableId)
+				.DataTable(
+						{
+							"ajax" : {
+								"url" : url,
+								"contentType" : "application/x-www-form-urlencoded",
+								"method" : "post",
+								"data" : function(d) {
+								}
+							},
+							"columns" : [ 
+							{
+								"data" : 'name'
+							}, {
+								"data" : 'type'
+							}, {
+								"data" : 'url'
+							},//key
+							{
+								"data" : 'saved'
+							}, {
+								"data" : 'interval'
+							}
+							],
+						});
+
+		/* actDataTable.on('order.dt search.dt', function() {
+			actDataTable.column(0, {
+				search : 'applied',
+				order : 'applied'
+			}).nodes().each(function(cell, i) {
+				cell.innerHTML = i + 1;
+			});
+		}).draw(); */
+
+	}
+</script>
+</body>
+</html>
