@@ -1,0 +1,13 @@
+server:
+  context-path: /service-rt
+  port: 8081
+
+---
+spring:
+  profiles: dev
+zkName: zk-dev
+
+---
+spring:
+  profiles: online
+zkName: zk-online
