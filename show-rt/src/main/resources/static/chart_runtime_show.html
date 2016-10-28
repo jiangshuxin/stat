@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<head>
+    <title>STAT - Runtime - Show - based on WebSocket </title>
+
+    <script src="amaze/assets/js/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        var ws = null;
+        var url = 'ws://' + window.location.host + '/show-rt/websock/chart/show.htm';
+        
+        $(function(){
+        	window.opener.postMessage({action:'init'},'*');
+        	self.addEventListener("message", function(event) { 
+    			statObj = event.data;
+    			connect();
+    		}, false);
+        });
+
+        function connect() {
+            ws = new WebSocket(url);
+
+            ws.onopen = function () {
+            	console.log('sxjiang');
+            	chartInit();
+            	ws.send('fixme');
+            };
+            ws.onmessage = function (event) {
+            	console.log(event.data);
+                drawOnce($.parseJSON(event.data));
+            };
+            ws.onclose = function (event) {
+            	
+            };
+        }
+
+        function disconnect() {
+            if (ws != null) {
+                ws.close();
+                ws = null;
+            }
+        }
+
+    </script>
+</head>
+<body>
+<div id="main" style="height:700px"></div>
+</body>
+<script src="http://echarts.baidu.com/dist/echarts.min.js"></script> 
+<script type="text/javascript">
+        
+        	function chartInit(){
+        		 // 基于准备好的dom，初始化echarts图表
+                myChart = echarts.init(document.getElementById('main')); 
+                 
+                 option = {
+                		    title: {
+                                text: 'test'
+                		    },
+                		    tooltip : {
+                		        trigger: 'axis'
+                		    },
+                		    legend: {
+                		        data:[]
+                		    },
+                		    toolbox: {
+                		        feature: {
+                		            saveAsImage: {}
+                		        }
+                		    },
+                		    grid: {
+                		        left: '3%',
+                		        right: '4%',
+                		        bottom: '3%',
+                		        containLabel: true
+                		    },
+                		    xAxis : [
+                		        {
+                		            type : 'category',
+                		            boundaryGap : false,
+                		            data : []
+                		        }
+                		    ],
+                		    yAxis : [
+                		        {
+                		            type : 'value'
+                		        }
+                		    ],
+                		    series : [
+                		    ]
+                		};
+        	}
+               
+        	var timeCount = 0;
+                 function drawOnce(jsonObj){
+                	 console.log(jsonObj.success);
+
+                     var dataObj = jsonObj.data;
+                	 var seriesList = dataObj.seriesList;
+                	 var title = dataObj.title;
+                	 var xAxisDataList = dataObj.xAxisDataList;
+
+                     option.xAxis[0].data = option.xAxis[0].data.concat(xAxisDataList);
+
+                     for(var k in seriesList){
+                         var name = seriesList[k].name;
+                         var dataList = seriesList[k].dataList;
+                         var index = option.legend.data.indexOf(name);
+                         if(index == -1){
+                             option.legend.data.push(name);
+                             option.series.push({
+                                 name:name,
+                                 type:'line',
+                                 areaStyle: {normal: {opacity:0}},
+                                 data:dataList
+                             });
+                         }else{
+                             option.series[index].data = option.series[index].data.concat(dataList);
+                         }
+                     }
+
+                	 myChart.setOption(option);
+                 }
+    </script>
+</html>

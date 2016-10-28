@@ -1,5 +1,6 @@
 package com.handpay.arch.stat.config;
 
+import com.handpay.arch.stat.handler.ChartHandler;
 import com.handpay.arch.stat.handler.StatResultHandler;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -24,10 +25,16 @@ public class WebSocketTest extends SpringBootServletInitializer
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 //        registry.addHandler(statResultHandler(), "/websock/echo").withSockJS();
         registry.addHandler(statResultHandler(), "/websock/init.htm");
+        registry.addHandler(chartHandler(), "/websock/chart/show.htm");
     }
 
     @Bean
     public StatResultHandler statResultHandler() {
         return new StatResultHandler();
+    }
+
+    @Bean
+    public ChartHandler chartHandler() {
+        return new ChartHandler();
     }
 }

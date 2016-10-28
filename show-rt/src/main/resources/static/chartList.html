@@ -163,6 +163,7 @@
 //				statObj.queueName = 'stat-runtime-result-'+statObj.name;
 //				targetWin.postMessage(statObj,'*');
 //			}
+            targetWin.postMessage('','*');
 		}, false);
 	});
 
@@ -191,6 +192,25 @@
 								"data" : 'interval'
 							}
 							],
+                            "columnDefs" : [
+                                {
+                                    "render" : function(data, type, row,index){
+                                        var btnArr = [
+                                            '<table><tr>',
+                                            '<td><button class="am-btn am-btn-primary am-btn-xs" onclick="javascript:viewRuntime(this,\''+row.name+'\')">实时数据展示</button></td>',
+                                            '<td><button class="am-btn am-btn-secondary am-btn-xs" onclick="javascript:viewHistory(this,\''+row.name+'\')">历史数据展示</button></td>',
+                                            '</tr></table>'
+                                        ];
+                                        return btnArr.join('\n');
+                                    },
+                                    "targets" : 5
+                                },
+                                {
+                                    "searchable" : true,
+                                    "orderable" : true,
+                                    "targets" : [ 0, 1, 2 ]
+                                }
+                            ],
 						});
 
 		/* actDataTable.on('order.dt search.dt', function() {
@@ -203,6 +223,10 @@
 		}).draw(); */
 
 	}
+
+	function viewRuntime(obj,name){
+        targetWin = window.open('/show-rt/chart_runtime_show.html');
+    }
 </script>
 </body>
 </html>
