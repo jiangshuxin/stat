@@ -4,6 +4,25 @@
 	<groupId>com.handpay</groupId>
 	<version>0.0.1-SNAPSHOT</version>
 	<artifactId>app-ext</artifactId>
+	<repositories>
+		<repository>
+			<id>handpay-public</id>
+			<name>Handpay Public Repository</name>
+			<url>http://maven.99wuxian.com/nexus/content/repositories/handpay-public/</url>
+		</repository>
+	</repositories>
+
+	<!-- distribution config (mvnrep.handpay.com.cn)-->
+	<distributionManagement>
+		<repository>
+			<id>handpay-releases</id>
+			<url>http://maven.99wuxian.com/nexus/content/repositories/handpay-releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>handpay-snapshots</id>
+			<url>http://maven.99wuxian.com/nexus/content/repositories/handpay-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 	<dependencies>
 		<dependency>
 			<groupId>com.handpay</groupId>
