@@ -16,4 +16,14 @@
 		http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
 	<import resource="classpath:spring/stat-base.xml"/>
+
+	<bean class="com.handpay.arch.stat.manager.impl.PropertiesStreamManager">
+		<property name="filePaths">
+			<list>
+				<value>com/handpay/arch/stat/demo/salary.properties</value>
+				<value>com/handpay/arch/stat/mobile/mobilefee.properties</value>
+				<value>com/handpay/arch/stat/rpc/dubbo.properties</value>
+			</list>
+		</property>
+	</bean>
 </beans>

@@ -69,9 +69,9 @@ public final class SqlStreamingMain2 {
 		}
 
 		SparkConf sparkConf = new SparkConf().setAppName("SqlStreamingMain").setMaster("spark://10.48.193.210:7077")
-				.setJars(new String[] { "/Users/sxjiang/git/stat/arch.stat/calc-rt/target/calc-rt-0.0.1-SNAPSHOT.jar"
-				,"/Users/sxjiang/git/stat/arch.stat/base-api/target/base-api-0.0.1-SNAPSHOT.jar"
-				,"/Users/sxjiang/git/stat/arch.stat/app-ext/target/app-ext-0.0.1-SNAPSHOT.jar"
+				.setJars(new String[] { "/Users/sxjiang/git/stat_github/calc-rt/target/calc-rt-0.0.1-SNAPSHOT.jar"
+				,"/Users/sxjiang/git/stat_github/base-api/target/base-api-0.0.1-SNAPSHOT.jar"
+				,"/Users/sxjiang/git/stat_github/app-ext/target/app-ext-0.0.1-SNAPSHOT.jar"
 				,"/Users/sxjiang/git/stat/arch.stat/calc-rt/lib/spark-examples-1.6.1-hadoop2.4.0.jar"
 				,"/Users/sxjiang/git/stat/arch.stat/calc-rt/lib/spring-core-3.1.4.RELEASE.jar"		
 				,"/Users/sxjiang/git/stat/arch.stat/calc-rt/lib/spring-beans-3.1.4.RELEASE.jar"		
