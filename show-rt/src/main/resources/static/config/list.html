@@ -1,0 +1,228 @@
+<!doctype html>
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Amaze UI Admin table Examples</title>
+  <meta name="description" content="这是一个 table 页面">
+  <meta name="keywords" content="table">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="icon" type="image/png" href="../amaze/assets/i/favicon.png">
+  <link rel="apple-touch-icon-precomposed" href="../amaze/assets/i/app-icon72x72@2x.png">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+  <link rel="stylesheet" href="../amaze/assets/css/amazeui.min.css"/>
+  <link rel="stylesheet" href="../amaze/assets/css/admin.css">
+</head>
+<body>
+<!--[if lte IE 9]>
+<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
+  以获得更好的体验！</p>
+<![endif]-->
+
+<header class="am-topbar am-topbar-inverse admin-header">
+  <div class="am-topbar-brand">
+    <strong>Amaze UI</strong> <small>后台管理模板</small>
+  </div>
+
+  <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
+
+  <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+
+    <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
+      <li><a href="javascript:;"><span class="am-icon-envelope-o"></span> 收件箱 <span class="am-badge am-badge-warning">5</span></a></li>
+      <li class="am-dropdown" data-am-dropdown>
+        <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+          <span class="am-icon-users"></span> 管理员 <span class="am-icon-caret-down"></span>
+        </a>
+        <ul class="am-dropdown-content">
+          <li><a href="#"><span class="am-icon-user"></span> 资料</a></li>
+          <li><a href="#"><span class="am-icon-cog"></span> 设置</a></li>
+          <li><a href="#"><span class="am-icon-power-off"></span> 退出</a></li>
+        </ul>
+      </li>
+      <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen"><span class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a></li>
+    </ul>
+  </div>
+</header>
+
+<div class="am-cf admin-main">
+  <!-- content start -->
+  <div class="admin-content">
+    <div class="admin-content-body">
+      <div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">配置中心</strong> / <small>配置信息管理</small></div>
+      </div>
+
+      <hr>
+
+      <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-6">
+          <div class="am-btn-toolbar">
+            <div class="am-btn-group am-btn-group-xs">
+              <button type="button" class="am-btn am-btn-default" id="save"><span class="am-icon-plus"></span> 新增</button>
+              <button type="button" class="am-btn am-btn-default" id="batchDelete"><span class="am-icon-trash-o"></span> 批量删除</button>
+            </div>
+          </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-3">
+          <div class="am-form-group">
+            <select data-am-selected="{btnSize: 'sm'}">
+              <option value="option1">所有类别</option>
+              <option value="option3">笔记本电脑</option>
+              <option value="option3">平板电脑</option>
+              <option value="option3">智能手机</option>
+              <option value="option3">超极本</option>
+            </select>
+          </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-3">
+          <div class="am-input-group am-input-group-sm">
+            <input type="text" class="am-form-field">
+          <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" type="button">搜索</button>
+          </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="am-g">
+        <div class="am-u-sm-12">
+            <table class="am-table am-table-striped am-table-hover table-main" id="config-table">
+              <tr>
+                <th class="table-check"><input type="checkbox"/></th>
+                <th class="table-id">ID</th>
+                <th class="table-title">名称</th>
+                <th class="table-type">类别</th>
+                <th class="table-author">对应表名</th>
+                <th class="table-date">描述信息</th>
+                <th class="table-set">操作</th>
+              </tr>
+              <tr class="tr_config0">
+                <td class="cb_config"><input type="checkbox" /></td>
+                <td class="id"></td>
+                <td><a href="#" class="name redirect"></a></td>
+                <td class="type"></td>
+                <td class="tableName"></td>
+                <td class="description"></td>
+                <td class="operate">
+                  <div class="am-btn-toolbar">
+                    <div class="am-btn-group am-btn-group-xs">
+                      <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-pencil-square-o"></span> 编辑</button>
+                      <button class="deleteOne am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-trash-o"></span> 删除</button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <div class="am-cf">
+              共 15 条记录
+              <div class="am-fr">
+                <ul class="am-pagination">
+                  <li class="am-disabled"><a href="#">«</a></li>
+                  <li class="am-active"><a href="#">1</a></li>
+                  <li><a href="#">2</a></li>
+                  <li><a href="#">3</a></li>
+                  <li><a href="#">4</a></li>
+                  <li><a href="#">5</a></li>
+                </ul>
+              </div>
+            </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="am-modal am-modal-confirm" tabindex="-1" id="my-confirm">
+      <div class="am-modal-dialog">
+          <div class="am-modal-bd">
+              你，确定要删除这条记录吗？
+          </div>
+          <div class="am-modal-footer">
+              <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+              <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+          </div>
+      </div>
+    </div>
+
+    <footer class="admin-content-footer">
+      <hr>
+      <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+    </footer>
+
+  </div>
+  <!-- content end -->
+</div>
+
+<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
+
+<script src="../amaze/assets/js/jquery.min.js"></script>
+<script src="../amaze/assets/js/amazeui.min.js"></script>
+<script src="../amaze/assets/js/app.js"></script>
+<script src="../amaze/assets/js/plugins.js"></script>
+<script>
+  $(function(){
+      //初始化表格数据
+      $.getJSON( getContextPath()+"/config/all", function( data ) {
+          //1. create tr td for data
+          for(var i=0; i<data.length-1; i++){
+              var $node = $(".tr_config"+i).clone();
+              $node.removeClass().addClass("tr_config"+(i+1));
+              $node.appendTo($("#config-table"));
+          }
+          //2. fill td data
+          var options = {
+              findby : "class",
+              restrict : true
+          }
+          $.each(data, function( index, value ) {
+              $(".tr_config"+index).fillTable( value, options );
+          });
+      });
+
+      //新增
+      $("#save").click(function(){
+          window.location.href = getContextPath()+"/config/add.html";
+      });
+
+      //删除
+      $("#config-table").on("click", ".deleteOne", function () {
+          var id = $(this).closest("tr").children().eq(1).html();
+          $('#my-confirm').modal({
+             relatedTarget: this,
+             onConfirm: function (options) {
+                 $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: getContextPath() + "/config/d",
+                    data: {"id": id},
+                    async: true,
+                    error: function (request) {
+                        alert("Connection error");
+                    },
+                    success: function (data) {
+                        window.location.href = getContextPath() + "/config/list.html";
+                    }
+                })
+             },
+             onCancel: function () {
+             }
+          });
+      });
+
+      //定向
+      $("#config-table").on("click", ".redirect", function () {
+          var config_type = $(this).closest("tr").children().eq(3).html();
+          if(config_type == "RPC信息") {
+              window.location.href =  getContextPath() + "/config/rpc_list.html";
+          }
+      });
+  });
+</script>
+<!--[if lt IE 9]>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script src="../amaze/assets/js/amazeui.ie8polyfill.min.js"></script>
+<![endif]-->
+</body>
+</html>

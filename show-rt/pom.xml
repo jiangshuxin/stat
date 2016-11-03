@@ -11,6 +11,7 @@
 
     <properties>
         <spring.boot.version>1.4.1.RELEASE</spring.boot.version>
+        <spring-data-releasetrain.version>Hopper-SR4</spring-data-releasetrain.version>
     </properties>
 
 	<dependencyManagement>
@@ -18,7 +19,7 @@
 			<dependency>
 				<groupId>org.springframework.data</groupId>
 				<artifactId>spring-data-releasetrain</artifactId>
-				<version>Fowler-SR2</version>
+				<version>${spring-data-releasetrain.version}</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
@@ -105,6 +106,15 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>

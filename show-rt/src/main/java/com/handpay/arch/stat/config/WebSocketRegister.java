@@ -18,7 +18,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @Configuration
 @EnableAutoConfiguration
 @EnableWebSocket
-public class WebSocketTest extends SpringBootServletInitializer
+public class WebSocketRegister extends SpringBootServletInitializer
         implements WebSocketConfigurer {
 
     @Override
