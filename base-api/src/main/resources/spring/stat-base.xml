@@ -12,15 +12,6 @@
 		http://www.springframework.org/schema/util
 		http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
-	<bean class="com.handpay.arch.stat.manager.impl.PropertiesStreamManager">
-		<property name="filePaths">
-			<list>
-				<value>com/handpay/arch/stat/demo/salary.properties</value>
-				<value>com/handpay/arch/stat/mobile/mobilefee.properties</value>
-			</list>
-		</property>
-	</bean>
-	
 	<bean class="com.handpay.arch.stat.processor.impl.DefaultStreamPostProcessor" destroy-method="destory"></bean>
 	
 	<bean class="com.handpay.arch.stat.client.impl.KafkaStatImpl" destroy-method="destory"></bean>
