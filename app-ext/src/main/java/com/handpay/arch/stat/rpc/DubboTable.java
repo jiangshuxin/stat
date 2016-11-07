@@ -13,8 +13,10 @@ public class DubboTable implements Serializable {
     private String spanId;
     private String className;
     private String methodName;
-    private String type;
-    private String time;
+    private String type;//qps  responseTime
+    private Long time;
+    private String status;
+    private String mode;//sender  receiver
 
     public String getInvokePath() {
         return invokePath;
@@ -72,11 +74,43 @@ public class DubboTable implements Serializable {
         this.type = type;
     }
 
-    public String getTime() {
+    public Long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Long time) {
         this.time = time;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    @Override
+    public String toString() {
+        return "DubboTable{" +
+                "invokePath='" + invokePath + '\'' +
+                ", clientHost='" + clientHost + '\'' +
+                ", serverHost='" + serverHost + '\'' +
+                ", spanId='" + spanId + '\'' +
+                ", className='" + className + '\'' +
+                ", methodName='" + methodName + '\'' +
+                ", type='" + type + '\'' +
+                ", time=" + time +
+                ", status='" + status + '\'' +
+                ", mode='" + mode + '\'' +
+                '}';
     }
 }

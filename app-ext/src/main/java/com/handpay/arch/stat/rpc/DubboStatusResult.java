@@ -7,10 +7,10 @@ import java.io.Serializable;
 /**
  * Created by sxjiang on 2016/11/1.
  */
-public class DubboQPSResult extends CommonResult implements Serializable {
+public class DubboStatusResult extends CommonResult implements Serializable {
     private static final long serialVersionUID = 1L;
     private String serverHost;
-    private String qps;
+    private String successRatio;
 
     public String getServerHost() {
         return serverHost;
@@ -20,19 +20,19 @@ public class DubboQPSResult extends CommonResult implements Serializable {
         this.serverHost = serverHost;
     }
 
-    public String getQps() {
-        return qps;
+    public String getSuccessRatio() {
+        return successRatio;
     }
 
-    public void setQps(String qps) {
-        this.qps = qps;
+    public void setSuccessRatio(String successRatio) {
+        this.successRatio = successRatio;
     }
 
     @Override
     public String toString() {
-        return "DubboQPSResult{" +
+        return "DubboStatusResult{" +
                 "serverHost='" + serverHost + '\'' +
-                ", qps='" + qps + '\'' +
+                ", successRatio='" + successRatio + '\'' +
                 '}';
     }
 }

@@ -1,11 +1,13 @@
 package com.handpay.arch.stat.rpc;
 
+import com.handpay.arch.stat.bean.CommonResult;
+
 import java.io.Serializable;
 
 /**
  * Created by sxjiang on 2016/11/1.
  */
-public class DubboRTResult implements Serializable {
+public class DubboRTResult extends CommonResult implements Serializable {
     private static final long serialVersionUID = 1L;
     private String invokePath;
     private String spanId;
@@ -51,5 +53,16 @@ public class DubboRTResult implements Serializable {
 
     public void setResponseTime(String responseTime) {
         this.responseTime = responseTime;
+    }
+
+    @Override
+    public String toString() {
+        return "DubboRTResult{" +
+                "invokePath='" + invokePath + '\'' +
+                ", spanId='" + spanId + '\'' +
+                ", className='" + className + '\'' +
+                ", methodName='" + methodName + '\'' +
+                ", responseTime='" + responseTime + '\'' +
+                '}';
     }
 }
