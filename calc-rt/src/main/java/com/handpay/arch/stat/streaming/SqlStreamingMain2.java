@@ -110,6 +110,7 @@ public final class SqlStreamingMain2 {
 		JavaStreamingContext jssc = new JavaStreamingContext(ctx, new Duration(bean.getBatchDuration()));
 		JavaPairReceiverInputDStream<String, String> messages = KafkaUtils.createStream(jssc, args[0], args[1],
 				topicMap);
+		//messages.print();
 
 		JavaDStream<String> lines = messages.map(new Function<Tuple2<String, String>, String>() {
 			@Override
@@ -124,7 +125,8 @@ public final class SqlStreamingMain2 {
 				if(filter == null) return true;
 				return filter.isValid(line);
 			}});
-		
+		//lines.print();
+
 		JavaDStream<Serializable> parsedStream = lines.map(new Function<String,Serializable>(){
 			private static final long serialVersionUID = 1L;
 
@@ -160,6 +162,7 @@ public final class SqlStreamingMain2 {
 					DataFrame dataFrame = sqlContext.sql(fSql);
 					final String[] columns = dataFrame.columns();//可能只包含Result中部分字段
 					JavaRDD<Row> rdd = dataFrame.toJavaRDD();
+					//System.out.println(rdd.collect());
 					final Date now = new Date();//一批计算结果使用的日期
 					return rdd.map(new Function<Row, Serializable>() {
 						private static final long serialVersionUID = 1L;
@@ -190,7 +193,7 @@ public final class SqlStreamingMain2 {
 					return v2;
 				}});
 		}
-		allStream.print();
+
 		allStream.foreachRDD(new VoidFunction<JavaRDD<Serializable>>() {
 			private static final long serialVersionUID = 1L;
 			@Override
@@ -199,6 +202,7 @@ public final class SqlStreamingMain2 {
 				processor.process(bean,list);
 			}
 		});
+		allStream.print();
 
 		
 		
