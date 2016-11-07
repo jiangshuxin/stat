@@ -18,10 +18,6 @@ public abstract class SequentialParser implements StreamParser {
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
-	 * 存储单行解析结果的链表
-	 */
-	private List<String> parsedList = Lists.newArrayList();
-	/**
 	 * key-链表索引
 	 * value-目标类型属性值
 	 */
@@ -30,6 +26,7 @@ public abstract class SequentialParser implements StreamParser {
 	private String indexMapStr;//indexMap字符串形式  1:serialNo,2:salary,3:department
 
 	public <T extends Serializable> T parse(String line, Class<T> targetClass) {
+		List<String> parsedList = Lists.newArrayList();//存储单行解析结果的链表
 		parseLine(line,parsedList);
 		
 		if(indexMap.size() == 0) {
