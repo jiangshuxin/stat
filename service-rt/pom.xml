@@ -19,7 +19,7 @@
             <dependency>
                 <groupId>org.springframework.data</groupId>
                 <artifactId>spring-data-releasetrain</artifactId>
-                <version>Fowler-SR2</version>
+                <version>Hopper-SR4</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
@@ -43,6 +43,11 @@
         <dependency>
             <groupId>com.handpay</groupId>
             <artifactId>app-ext</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.handpay</groupId>
+            <artifactId>domain-rt</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -136,6 +141,15 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

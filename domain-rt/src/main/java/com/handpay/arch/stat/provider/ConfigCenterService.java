@@ -1,7 +1,9 @@
-package com.handpay.arch.stat.service;
+package com.handpay.arch.stat.provider;
 
-import com.handpay.arch.stat.domain.po.ConfigEntity;
-import com.handpay.arch.stat.domain.po.RPCConfig;
+
+import com.handpay.arch.stat.domain.ConfigEntity;
+import com.handpay.arch.stat.domain.MetricKpi;
+import com.handpay.arch.stat.domain.RPCConfig;
 
 import java.util.List;
 
@@ -25,4 +27,7 @@ public interface ConfigCenterService {
     void deleteSpecific(int id);
 
     List<?> findRPC(RPCConfig rpcConfig);
+
+    /***************** 指标/告警 ****************/
+    List<MetricKpi> findKpi();
 }

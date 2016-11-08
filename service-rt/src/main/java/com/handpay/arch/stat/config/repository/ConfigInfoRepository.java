@@ -1,6 +1,7 @@
-package com.handpay.arch.stat.repository;
+package com.handpay.arch.stat.config.repository;
 
-import com.handpay.arch.stat.domain.po.ConfigEntity;
+
+import com.handpay.arch.stat.domain.ConfigEntity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

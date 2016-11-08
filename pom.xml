@@ -16,6 +16,7 @@
 		<module>calc-rt</module>
 		<module>service-rt</module>
 		<module>show-rt</module>
+		<module>domain-rt</module>
 	</modules>
 	<properties>
 		<spring-version>4.3.3.RELEASE</spring-version>

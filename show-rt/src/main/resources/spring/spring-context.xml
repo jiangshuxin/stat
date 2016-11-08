@@ -23,6 +23,7 @@
 		<property name="locations">
 			<list>
  				<value>classpath*:prop/rache.properties</value>
+				<value>classpath*:prop/dubbo.properties</value>
 			</list>
 		</property>
 	</bean>
