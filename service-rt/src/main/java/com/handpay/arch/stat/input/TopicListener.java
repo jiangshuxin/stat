@@ -26,7 +26,7 @@ public class TopicListener {
 	public void listen() {
 		Collection<StatBean> statArray = manager.stats();
 		for (StatBean bean : statArray) {
-			Consumer c = new Consumer(bean.getResultTopic(), bean.getName());
+			Consumer c = new Consumer(bean);
 			c.setWriter(writer);
 			executorService.submit(c);
 		}

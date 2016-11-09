@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import com.alibaba.fastjson.JSON;
 import com.handpay.arch.stat.bean.CommonResult;
+import com.handpay.arch.stat.bean.StatBean;
 import com.handpay.arch.stat.output.StreamWriter;
 
 import kafka.consumer.ConsumerConfig;
@@ -16,14 +17,12 @@ import kafka.javaapi.consumer.ConsumerConnector;
 
 public class Consumer implements Runnable {
 	private final ConsumerConnector consumer;
-	private final String topic;
-	private final String statName;
+	private final StatBean statBean;
 	private StreamWriter writer;
 
-	public Consumer(String topic, String statName) {
+	public Consumer(StatBean statBean) {
 		consumer = kafka.consumer.Consumer.createJavaConsumerConnector(createConsumerConfig());
-		this.topic = topic;
-		this.statName = statName;
+		this.statBean = statBean;
 	}
 
 	private static ConsumerConfig createConsumerConfig() {
@@ -40,12 +39,12 @@ public class Consumer implements Runnable {
 
 	public void run() {
 		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-		topicCountMap.put(topic, new Integer(1));
+		topicCountMap.put(statBean.getTopic(), new Integer(1));
 		Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCountMap);
-		KafkaStream<byte[], byte[]> stream = consumerMap.get(topic).get(0);
+		KafkaStream<byte[], byte[]> stream = consumerMap.get(statBean.getTopic()).get(0);
 		ConsumerIterator<byte[], byte[]> it = stream.iterator();
 		while (it.hasNext()) {
-			writer.write(statName, (CommonResult) JSON.parse(new String(it.next().message())));
+			writer.write(statBean, (CommonResult) JSON.parse(new String(it.next().message())));
 		}
 	}
 

@@ -2,7 +2,7 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${user.home}/logs/stat/service-rt/service.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${user.home}/logs/icsOrderReport/service.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <fileNamePattern>${user.home}/logs/stat/service-rt/service.log.%d{yyyy-MM-dd}</fileNamePattern>
         </rollingPolicy>
         <encoder>
             <pattern>%date [%-5level] [%logger{0}] [%thread] %msg%n</pattern>
@@ -13,8 +13,7 @@
             <pattern>%date [%-5level] [%logger{0}] [%thread] %msg%n</pattern>
         </encoder>
     </appender>
-    <root level="INFO">
-        <appender-ref ref="FILE" />
+    <root level="DEBUG">
         <appender-ref ref="CONSOLE" />
     </root>
 </configuration>
