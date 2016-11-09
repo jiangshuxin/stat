@@ -155,13 +155,13 @@ public class PropertiesStreamManager extends AbstractStreamManager {
 	@SuppressWarnings("unchecked")
 	private void extractAnnotation(StatBean bean) {
 		SortedSet<KeyOrder> set = new TreeSet<KeyOrder>(new KeyOrderComparator());
-		for(Field f : bean.getResultClass().getFields()){
+		for(Field f : bean.getResultClass().getDeclaredFields()){
 			f.setAccessible(true);
-			GroupKey gk = AnnotationUtils.getAnnotation(f, GroupKey.class);
+			GroupKey gk = f.getAnnotation(GroupKey.class);
 			if(gk != null){
 				bean.setGroupKey(f.getName());
 			}
-			ValueKey vk = AnnotationUtils.getAnnotation(f, ValueKey.class);
+			ValueKey vk = f.getAnnotation(ValueKey.class);
 			if(vk != null){
 				set.add(new KeyOrder(f.getName(),vk.order()));
 			}

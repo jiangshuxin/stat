@@ -14,7 +14,6 @@ public abstract class AbstractStreamWriter implements StreamWriter {
 
 	@Override
 	public void write(StatBean statBean, CommonResult... unit) {
-		System.out.println("########################");
 		SaveRequest[] request = buildRequest(statBean,unit);
 		write(request);
 	}
@@ -24,6 +23,7 @@ public abstract class AbstractStreamWriter implements StreamWriter {
 	private SaveRequest[] buildRequest(StatBean statBean, CommonResult[] units) {
 		//yyyyMMdd分组的情况：跨日终
 		SortedMap<String,SaveRequest> yyMap = new TreeMap<String,SaveRequest>();
+
 		for(CommonResult unit : units){
 			String ymd = unit.getYyyyMMdd();
 			String yyKey = ymd;

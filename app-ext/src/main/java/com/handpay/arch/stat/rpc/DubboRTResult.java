@@ -65,6 +65,6 @@ public class DubboRTResult extends CommonResult implements Serializable {
                 ", className='" + className + '\'' +
                 ", methodName='" + methodName + '\'' +
                 ", responseTime='" + responseTime + '\'' +
-                '}';
+                '}' +super.toString();
     }
 }

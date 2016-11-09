@@ -2,9 +2,12 @@ package com.handpay.arch.stat.output.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.handpay.arch.stat.bean.CommonResult;
 import com.handpay.rache.core.spring.StringRedisTemplateX;
 import com.handpay.rache.core.spring.connection.StringRedisConnectionX;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,6 +18,8 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 import java.util.Set;
 
 @Service("redisStreamWriter")
@@ -22,29 +27,36 @@ public class RedisStreamWriter extends AbstractStreamWriter {
 	@Autowired
 	@Qualifier("stringRedisTemplateX")
 	private StringRedisTemplateX stringRedisTemplateX;
+
+	public static final String REDIS_RUNTIME_KEY = "stat-runtime-result";
 	
 	@Override
 	protected void write(SaveRequest[] request) {
-		System.out.println("########################");
 		for(final SaveRequest req : request){
 			//历史记录存储,本集合存储日期,表示有哪天的数据
 			stringRedisTemplateX.boundZSetOps(req.getStatBean().getName()).add(req.getYyyyMMdd(),Double.parseDouble(StringUtils.replace(req.getYyyyMMdd(), "-", "")));//{statName : [2016-08-08,2016-08-09]}
 
 			final String groupKey = req.getStatBean().getGroupKey();
-			Set<TypedTuple<String>> set = extractMapTransform(req);
 
 			//groupKey如果存在,存储明细数据的集合加上groupKey,方便根据groupKey进行查找
-			if(StringUtils.isNotEmpty(req.getStatBean().getGroupKey())){
-				stringRedisTemplateX.boundZSetOps(StringUtils.join(new Object[]{req.getStatBean().getName(),req.getYyyyMMdd(),groupKey}, "-")).add(set);
+			if(StringUtils.isNotEmpty(groupKey)){
+				final Map<String,Set<TypedTuple<String>>> map = extractMapTransform2(req,groupKey);
+				for(String key : map.keySet()){
+					stringRedisTemplateX.boundZSetOps(StringUtils.join(new Object[]{req.getStatBean().getName(),req.getYyyyMMdd(),key}, "-")).add(map.get(key));
+				}
 
 				//推送至实时消费模块
 				stringRedisTemplateX.execute(new RedisCallback<Long>(){
 					@Override
 					public Long doInRedis(RedisConnection connection) throws DataAccessException {
 						StringRedisConnectionX conn = (StringRedisConnectionX)connection;
-						return conn.publish(StringUtils.join(new Object[]{"stat-runtime-result-",req.getStatBean().getName(),groupKey}, "-"), JSON.toJSONString(req, SerializerFeature.WriteDateUseDateFormat));
+						for(String key : map.keySet()){
+							conn.publish(StringUtils.join(new Object[]{REDIS_RUNTIME_KEY,req.getStatBean().getName(),key}, "-"), JSON.toJSONString(map.get(key), SerializerFeature.WriteDateUseDateFormat));
+						}
+						return 0L;
 					}});
 			}else{
+				final Set<TypedTuple<String>> set = extractMapTransform(req);
 				stringRedisTemplateX.boundZSetOps(StringUtils.join(new Object[]{req.getStatBean().getName(),req.getYyyyMMdd()}, "-")).add(set);
 
 				//推送至实时消费模块
@@ -52,7 +64,7 @@ public class RedisStreamWriter extends AbstractStreamWriter {
 					@Override
 					public Long doInRedis(RedisConnection connection) throws DataAccessException {
 						StringRedisConnectionX conn = (StringRedisConnectionX)connection;
-						return conn.publish(StringUtils.join(new Object[]{"stat-runtime-result-",req.getStatBean().getName()}, "-"), JSON.toJSONString(req, SerializerFeature.WriteDateUseDateFormat));
+						return conn.publish(StringUtils.join(new Object[]{REDIS_RUNTIME_KEY,req.getStatBean().getName()}, "-"), JSON.toJSONString(set, SerializerFeature.WriteDateUseDateFormat));
 					}});
 			}
 		}
@@ -65,5 +77,30 @@ public class RedisStreamWriter extends AbstractStreamWriter {
 			set.add(tt);
 		}
 		return set;
+	}
+
+	private Map<String,Set<TypedTuple<String>>> extractMapTransform2(SaveRequest req,String groupKey) {
+		Map<String,Set<TypedTuple<String>>> map = Maps.newHashMap();
+
+		for(String key : req.getTimeValueMap().keySet()){
+			CommonResult result = req.getTimeValueMap().get(key);
+			Object groupValue = null;
+			try {
+				groupValue = PropertyUtils.getProperty(result,groupKey);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(groupValue == null) continue;
+			String groupKeyStr = groupValue.toString();
+			DefaultTypedTuple<String> tt = new DefaultTypedTuple<String>(JSON.toJSONString(result, SerializerFeature.WriteClassName,SerializerFeature.WriteDateUseDateFormat),Double.parseDouble(req.getTimeValueMap().get(key).getNowLong().toString()));
+			if(map.containsKey(groupKeyStr)){
+				map.get(groupKeyStr).add(tt);
+			}else{
+				Set<TypedTuple<String>> set = Sets.newHashSet();
+				set.add(tt);
+				map.put(groupKeyStr,set);
+			}
+		}
+		return map;
 	}
 }

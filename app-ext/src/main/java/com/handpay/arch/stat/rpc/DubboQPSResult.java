@@ -37,6 +37,6 @@ public class DubboQPSResult extends CommonResult implements Serializable {
         return "DubboQPSResult{" +
                 "serverHost='" + serverHost + '\'' +
                 ", qps='" + qps + '\'' +
-                '}';
+                '}'+super.toString();
     }
 }

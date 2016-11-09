@@ -39,9 +39,9 @@ public class Consumer implements Runnable {
 
 	public void run() {
 		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-		topicCountMap.put(statBean.getTopic(), new Integer(1));
+		topicCountMap.put(statBean.getResultTopic(), new Integer(1));
 		Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCountMap);
-		KafkaStream<byte[], byte[]> stream = consumerMap.get(statBean.getTopic()).get(0);
+		KafkaStream<byte[], byte[]> stream = consumerMap.get(statBean.getResultTopic()).get(0);
 		ConsumerIterator<byte[], byte[]> it = stream.iterator();
 		while (it.hasNext()) {
 			writer.write(statBean, (CommonResult) JSON.parse(new String(it.next().message())));
