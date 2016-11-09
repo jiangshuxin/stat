@@ -52,7 +52,7 @@
   <div class="admin-content">
     <div class="admin-content-body">
       <div class="am-cf am-padding am-padding-bottom-0">
-        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">配置中心</strong> / <small>配置信息管理 / 新增</small></div>
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">配置中心</strong> /<small>告警设置</small></div>
       </div>
 
       <hr>
@@ -65,55 +65,52 @@
             <div class="am-tabs-bd">
                 <div class="am-tab-panel am-fade am-in am-active" id="tab1">
                     <form class="am-form" id="config-form" method="post">
-                        <div class="am-g am-margin-top-sm">
-                            <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                名称
-                            </div>
-                            <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                                <input type="text" class="am-input-sm" name="name">
-                            </div>
-                        </div>
-
                         <div class="am-g am-margin-top">
-                            <div class="am-u-sm-4 am-u-md-2 am-text-right">所属类别</div>
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">所属业务</div>
                             <div class="am-u-sm-8 am-u-md-10">
-                                <select data-am-selected="{btnSize: 'sm'}" name="type">
-                                    <option value="10001">服务器监控</option>
-                                    <option value="10002">RPC信息</option>
-                                    <option value="10003">JVM</option>
-                                    <option value="10004">业务数据</option>
+                                <select data-am-selected="{btnSize: 'sm'}" name="businessLine">
+                                    <option value="TOP">TOP</option>
+                                    <option value="IBS">IBS</option>
+                                    <option value="ICS">ICS</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="am-g am-margin-top-sm">
                             <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                对应表名
+                                对应实例
                             </div>
                             <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                                <input type="text" class="am-input-sm" name="tableName">
+                                <input type="text" class="am-input-sm" name="appInstance">
                             </div>
                         </div>
 
                         <div class="am-g am-margin-top-sm">
                             <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                描述信息
+                                应用名
                             </div>
                             <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                                <textarea rows="4" name="description"></textarea>
+                                <input type="text" class="am-input-sm" name="appName">
                             </div>
                         </div>
 
                         <div class="am-g am-margin-top-sm">
                             <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                指标绑定
+                                服务名
                             </div>
                             <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                                <select multiple data-am-selected="{dropUp: 1, btnWidth: '80%', btnSize: 'sm'}" name="kpiList" id="kpi">
-                                </select>
+                                <input type="text" class="am-input-sm" name="serviceName">
                             </div>
                         </div>
-                        <br>
+
+                        <div class="am-g am-margin-top-sm">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                                方法名
+                            </div>
+                            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+                                <input type="text" class="am-input-sm" name="methodName">
+                            </div>
+                        </div>
                     </form>
                 </div>
 
@@ -133,17 +130,17 @@
 <script src="../amaze/assets/js/plugins.js"></script>
 <script>
   $(function(){
+    var id = parseSearch()["id"];
+
     $("#quitSave").click(function () {
         window.location.href = getContextPath() + "/config/list.html";
     });
 
     $("#submitSave").click(function () {
-        alert($('#config-form').serialize());
-        return;
         $.ajax({
            cache: true,
            type: "POST",
-           url: getContextPath() + "/config/s",
+           url: getContextPath() + "/config/rpc/s",
            data: $('#config-form').serialize(),
            async: true,
            error: function (request) {
@@ -151,23 +148,6 @@
            },
            success: function (data) {
                window.location.href = getContextPath() + "/config/list.html";
-           }
-       });
-    });
-
-    $().ready(function () {
-        $.ajax({
-           cache: true,
-           type: "GET",
-           url: getContextPath() + "/kpi/all",
-           async: true,
-           error: function (request) {
-               alert("Connection error");
-           },
-           success: function (data) {
-               $.each(data, function(i, v){
-                   $("#kpi").append('<option value="' + v.id +'">' + v.shortName + '</option>');
-               });
            }
        });
     });

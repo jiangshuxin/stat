@@ -5,6 +5,13 @@ server:
 ---
 spring:
   profiles: dev
+  datasource:
+    url: jdbc:mysql://10.48.193.201:3306/showrt
+    username: test
+    password: test1234
+  jpa:
+    database: MYSQL
+    show-sql: true
 zkName: zk-dev
 
 ---

@@ -1,8 +1,8 @@
 package com.handpay.arch.stat.controller;
 
-import com.handpay.arch.stat.domain.po.ConfigEntity;
-import com.handpay.arch.stat.domain.po.RPCConfig;
-import com.handpay.arch.stat.service.ConfigCenterService;
+import com.handpay.arch.stat.domain.ConfigEntity;
+import com.handpay.arch.stat.domain.RPCConfig;
+import com.handpay.arch.stat.provider.ConfigCenterService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +38,8 @@ public class ConfigCenterController {
         return true;
     }
 
+
+    /******************************** RPC *****************************************/
     @GetMapping("/config/rpc/all")
     public List<?> findRPCAll() {
         return configCenterService.findSpecificAll();
@@ -57,5 +59,12 @@ public class ConfigCenterController {
     @GetMapping("/config/rpc/condition")
     public List<?> findRPC(RPCConfig rpcConfig) {
         return configCenterService.findRPC(rpcConfig);
+    }
+
+
+    /******************************** 指标/告警 ************************************/
+    @GetMapping("/kpi/all")
+    public List<?> findKpi() {
+       return configCenterService.findKpi();
     }
 }

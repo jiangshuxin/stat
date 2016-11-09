@@ -5,19 +5,3 @@ server:
 spring:
   resources:
     static-locations:classpath:/resources/, classpath:/static/
-
----
-spring:
-  profiles: dev
-  datasource:
-    url: jdbc:mysql://localhost:3306/showrt
-    username: test
-    password: test123
-  jpa:
-    database: MYSQL
-    show-sql: true
----
-spring:
-  profiles: prod
-  jpa:
-    show-sql: false

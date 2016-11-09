@@ -1,10 +1,13 @@
-package com.handpay.arch.stat.service.impl;
+package com.handpay.arch.stat.config.service.impl;
 
-import com.handpay.arch.stat.domain.po.ConfigEntity;
-import com.handpay.arch.stat.domain.po.RPCConfig;
-import com.handpay.arch.stat.repository.ConfigInfoRepository;
-import com.handpay.arch.stat.repository.RPCConfigRepository;
-import com.handpay.arch.stat.service.ConfigCenterService;
+
+import com.handpay.arch.stat.config.repository.ConfigInfoRepository;
+import com.handpay.arch.stat.config.repository.KpiRepository;
+import com.handpay.arch.stat.config.repository.RPCConfigRepository;
+import com.handpay.arch.stat.domain.ConfigEntity;
+import com.handpay.arch.stat.domain.MetricKpi;
+import com.handpay.arch.stat.domain.RPCConfig;
+import com.handpay.arch.stat.provider.ConfigCenterService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -16,13 +19,15 @@ import java.util.List;
 /**
  * Created by fczheng on 2016/10/31.
  */
-@Service
+@Service("configCenterService")
 public class ConfigCenterServiceImpl implements ConfigCenterService {
 
     @Autowired
     private ConfigInfoRepository configInfoRepo;
     @Autowired
     private RPCConfigRepository rpcConfigRepo;
+    @Autowired
+    private KpiRepository kpiRepo;
 
     @Override
     public List<ConfigEntity> findAll() {
@@ -39,6 +44,8 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
         configInfoRepo.delete(id);
     }
 
+
+    /******************************** RPC *****************************************/
     @Override
     public Object saveSpecific(Object config) {
         if (config instanceof RPCConfig)
@@ -58,7 +65,14 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
 
     @Override
     public List<?> findRPC(RPCConfig rpcConfig) {
-        ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("id").withIgnoreNullValues();
+        ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("id");
         return rpcConfigRepo.findAll(Example.of(rpcConfig, matcher));
+    }
+
+
+    /******************************** kpi/alarm ***********************************/
+    @Override
+    public List<MetricKpi> findKpi() {
+        return kpiRepo.findAll();
     }
 }

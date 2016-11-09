@@ -204,13 +204,17 @@
       });
 
       //搜索
-      $(".search").click(function(){
-          $("tr[class^=tr_config]").each(function(index){
-            if(index !=0 ) {
-                $(this).remove();
-            }
-          });
-          fill("/config/rpc/condition", $('#search-form').serialize());
+      $(".search").click(function () {
+        $("tr[class^=tr_config]").each(function (index) {
+          if (index != 0) {
+            $(this).remove();
+          }
+        });
+
+        var param = $('#search-form').find(':input', ':selected').filter(function () {
+          return $.trim(this.value).length > 0;
+        }).serialize();  //去空
+        fill("/config/rpc/condition", param);
       });
 
       function fill(url, inData) {
