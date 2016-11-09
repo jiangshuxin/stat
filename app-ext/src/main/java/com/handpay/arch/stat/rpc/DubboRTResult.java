@@ -1,5 +1,6 @@
 package com.handpay.arch.stat.rpc;
 
+import com.handpay.arch.stat.anno.ValueKey;
 import com.handpay.arch.stat.bean.CommonResult;
 
 import java.io.Serializable;
@@ -13,6 +14,7 @@ public class DubboRTResult extends CommonResult implements Serializable {
     private String spanId;
     private String className;
     private String methodName;
+    @ValueKey(order=10)
     private String responseTime;
 
     public String getInvokePath() {

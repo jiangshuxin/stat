@@ -1,5 +1,7 @@
 package com.handpay.arch.stat.rpc;
 
+import com.handpay.arch.stat.anno.GroupKey;
+import com.handpay.arch.stat.anno.ValueKey;
 import com.handpay.arch.stat.bean.CommonResult;
 
 import java.io.Serializable;
@@ -9,7 +11,9 @@ import java.io.Serializable;
  */
 public class DubboQPSResult extends CommonResult implements Serializable {
     private static final long serialVersionUID = 1L;
+    @GroupKey
     private String serverHost;
+    @ValueKey(order=10)
     private String qps;
 
     public String getServerHost() {
