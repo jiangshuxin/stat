@@ -16,6 +16,10 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
 
 public class StatResultHandler extends TextWebSocketHandler {
 
@@ -26,24 +30,35 @@ public class StatResultHandler extends TextWebSocketHandler {
 	public void handleTextMessage(final WebSocketSession session, final TextMessage message) throws Exception {
 		System.out.println("test ..................");
 
-		session.sendMessage(new TextMessage("hello"));
-		
-		stringRedisTemplateX.execute(new RedisCallback<String>() {
-			@Override
-			public String doInRedis(RedisConnection connection) throws DataAccessException {
-				StringRedisConnectionX conn = (StringRedisConnectionX)connection;
-				conn.subscribe(new MessageListener(){
-					@Override
-					public void onMessage(Message message, byte[] pattern) {
-						try {
-							session.sendMessage(new TextMessage(new String(message.getBody())));
-						} catch (IOException e) {
-							e.printStackTrace();
+
+		String payload = message.getPayload();
+		final List<String> topicList = JSON.parseArray(payload,String.class);
+		for(final String topic : topicList){
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					stringRedisTemplateX.execute(new RedisCallback<String>() {
+						@Override
+						public String doInRedis(RedisConnection connection) throws DataAccessException {
+							final StringRedisConnectionX conn = (StringRedisConnectionX)connection;
+
+
+								conn.subscribe(new MessageListener(){
+									@Override
+									public void onMessage(Message message, byte[] pattern) {
+										try {
+											session.sendMessage(new TextMessage(new String(message.getBody())));
+										} catch (IOException e) {
+											e.printStackTrace();
+										}
+									}}, topic);
+
+							return null;
 						}
-					}}, message.getPayload());
-				return null;
-			}
-		});
+					});
+				}
+			}).start();
+		}
 	}
 
 	@Override

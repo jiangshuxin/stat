@@ -41,6 +41,7 @@ public class RedisStreamWriter extends AbstractStreamWriter {
 			//groupKey如果存在,存储明细数据的集合加上groupKey,方便根据groupKey进行查找
 			if(StringUtils.isNotEmpty(groupKey)){
 				final Map<String,Set<TypedTuple<String>>> map = extractMapTransform2(req,groupKey);
+				final Map<String,Set<CommonResult>> map2 = extractMapTransform3(req,groupKey);
 				for(String key : map.keySet()){
 					stringRedisTemplateX.boundZSetOps(StringUtils.join(new Object[]{req.getStatBean().getName(),req.getYyyyMMdd(),key}, "-")).add(map.get(key));
 				}
@@ -50,8 +51,8 @@ public class RedisStreamWriter extends AbstractStreamWriter {
 					@Override
 					public Long doInRedis(RedisConnection connection) throws DataAccessException {
 						StringRedisConnectionX conn = (StringRedisConnectionX)connection;
-						for(String key : map.keySet()){
-							conn.publish(StringUtils.join(new Object[]{REDIS_RUNTIME_KEY,req.getStatBean().getName(),key}, "-"), JSON.toJSONString(map.get(key), SerializerFeature.WriteDateUseDateFormat));
+						for(String key : map2.keySet()){
+							conn.publish(StringUtils.join(new Object[]{REDIS_RUNTIME_KEY,req.getStatBean().getName(),key}, "-"), JSON.toJSONString(map2.get(key), SerializerFeature.WriteDateUseDateFormat));
 						}
 						return 0L;
 					}});
@@ -64,6 +65,7 @@ public class RedisStreamWriter extends AbstractStreamWriter {
 					@Override
 					public Long doInRedis(RedisConnection connection) throws DataAccessException {
 						StringRedisConnectionX conn = (StringRedisConnectionX)connection;
+						//FIXME
 						return conn.publish(StringUtils.join(new Object[]{REDIS_RUNTIME_KEY,req.getStatBean().getName()}, "-"), JSON.toJSONString(set, SerializerFeature.WriteDateUseDateFormat));
 					}});
 			}
@@ -98,6 +100,30 @@ public class RedisStreamWriter extends AbstractStreamWriter {
 			}else{
 				Set<TypedTuple<String>> set = Sets.newHashSet();
 				set.add(tt);
+				map.put(groupKeyStr,set);
+			}
+		}
+		return map;
+	}
+
+	private Map<String,Set<CommonResult>> extractMapTransform3(SaveRequest req,String groupKey) {
+		Map<String,Set<CommonResult>> map = Maps.newHashMap();
+
+		for(String key : req.getTimeValueMap().keySet()){
+			CommonResult result = req.getTimeValueMap().get(key);
+			Object groupValue = null;
+			try {
+				groupValue = PropertyUtils.getProperty(result,groupKey);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(groupValue == null) continue;
+			String groupKeyStr = groupValue.toString();
+			if(map.containsKey(groupKeyStr)){
+				map.get(groupKeyStr).add(result);
+			}else{
+				Set<CommonResult> set = Sets.newHashSet();
+				set.add(result);
 				map.put(groupKeyStr,set);
 			}
 		}
