@@ -23,6 +23,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ *StreamWriter默认实现,基于Redis
+ * <ol>
+ * <li>根据statName存储yyyyMMdd集合,表示该指标有哪些天的记录;</li>
+ * <li>根据statName+yyyyMMdd+groupKey存储SaveRequest对象,便于历史数据查询</li>
+ * <li>根据'stat-runtime-result'+statName+groupKey推送SaveRequest对象</li>
+ * <li>根据statName+'GroupKeySet'存储该指标下groupKey的真实值,便于后续查找该指标下的维度信息。</li>
+ * <ol/>
+ */
 @Service("redisStreamWriter")
 public class RedisStreamWriter extends AbstractStreamWriter {
 	@Autowired
@@ -30,6 +39,7 @@ public class RedisStreamWriter extends AbstractStreamWriter {
 	private StringRedisTemplateX stringRedisTemplateX;
 
 	public static final String REDIS_RUNTIME_KEY = "stat-runtime-result";
+	public static final String GROUP_SET_SUFFIX = "GroupKeySet";
 	
 	@Override
 	protected void write(SaveRequest[] request) {
@@ -113,6 +123,7 @@ public class RedisStreamWriter extends AbstractStreamWriter {
 
 	private Map<String,Set<CommonResult>> extractMapTransform3(SaveRequest req,String groupKey) {
 		Map<String,Set<CommonResult>> map = Maps.newHashMap();
+		Set<TypedTuple<String>> gkSet = Sets.newHashSet();
 
         String[] groupKeyArray = StringUtils.split(groupKey,'|');
         for(String key : req.getTimeValueMap().keySet()){
@@ -127,6 +138,8 @@ public class RedisStreamWriter extends AbstractStreamWriter {
             }
             if(groupValueList.isEmpty()) continue;
             String groupKeyStr = StringUtils.join(groupValueList,'|');
+			DefaultTypedTuple<String> tt = new DefaultTypedTuple<String>(groupKeyStr,100D);
+			gkSet.add(tt);
 			if(map.containsKey(groupKeyStr)){
 				map.get(groupKeyStr).add(result);
 			}else{
@@ -135,6 +148,7 @@ public class RedisStreamWriter extends AbstractStreamWriter {
 				map.put(groupKeyStr,set);
 			}
 		}
+		stringRedisTemplateX.boundZSetOps(StringUtils.join(new String[]{req.getStatBean().getName(),GROUP_SET_SUFFIX},'|')).add(gkSet);
 		return map;
 	}
 }
