@@ -155,17 +155,26 @@ public class PropertiesStreamManager extends AbstractStreamManager {
 	@SuppressWarnings("unchecked")
 	private void extractAnnotation(StatBean bean) {
 		SortedSet<KeyOrder> set = new TreeSet<KeyOrder>(new KeyOrderComparator());
+		SortedSet<KeyOrder> groupKeySet = new TreeSet<KeyOrder>(new KeyOrderComparator());
 		for(Field f : bean.getResultClass().getDeclaredFields()){
 			f.setAccessible(true);
 			GroupKey gk = f.getAnnotation(GroupKey.class);
 			if(gk != null){
-				bean.setGroupKey(f.getName());
+				groupKeySet.add(new KeyOrder(f.getName(),gk.order()));
 			}
 			ValueKey vk = f.getAnnotation(ValueKey.class);
 			if(vk != null){
 				set.add(new KeyOrder(f.getName(),vk.order()));
 			}
 		}
+		List<String> gkList = Lists.newArrayList();
+		for(KeyOrder ko : groupKeySet){
+			gkList.add(ko.getKey());
+		}
+		if(!gkList.isEmpty()){
+			bean.setGroupKey(StringUtils.join(gkList,'|'));
+		}
+
 		List<String> vkList = Lists.newArrayList();
 		for(KeyOrder ko : set){
 			vkList.add(ko.getKey());

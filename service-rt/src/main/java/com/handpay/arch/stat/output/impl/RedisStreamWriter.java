@@ -2,6 +2,7 @@ package com.handpay.arch.stat.output.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.handpay.arch.stat.bean.CommonResult;
@@ -18,7 +19,7 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -81,19 +82,23 @@ public class RedisStreamWriter extends AbstractStreamWriter {
 		return set;
 	}
 
+	//groupKey分两种情况,单个groupKey,或多个groupKey
 	private Map<String,Set<TypedTuple<String>>> extractMapTransform2(SaveRequest req,String groupKey) {
 		Map<String,Set<TypedTuple<String>>> map = Maps.newHashMap();
 
+        String[] groupKeyArray = StringUtils.split(groupKey,'|');
 		for(String key : req.getTimeValueMap().keySet()){
 			CommonResult result = req.getTimeValueMap().get(key);
-			Object groupValue = null;
+			List<Object> groupValueList = Lists.newArrayList();
 			try {
-				groupValue = PropertyUtils.getProperty(result,groupKey);
+			    for(String gkey : groupKeyArray){
+                    groupValueList.add(PropertyUtils.getProperty(result,gkey));
+                }
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			if(groupValue == null) continue;
-			String groupKeyStr = groupValue.toString();
+			if(groupValueList.isEmpty()) continue;
+			String groupKeyStr = StringUtils.join(groupValueList,'|');
 			DefaultTypedTuple<String> tt = new DefaultTypedTuple<String>(JSON.toJSONString(result, SerializerFeature.WriteClassName,SerializerFeature.WriteDateUseDateFormat),Double.parseDouble(req.getTimeValueMap().get(key).getNowLong().toString()));
 			if(map.containsKey(groupKeyStr)){
 				map.get(groupKeyStr).add(tt);
@@ -109,16 +114,19 @@ public class RedisStreamWriter extends AbstractStreamWriter {
 	private Map<String,Set<CommonResult>> extractMapTransform3(SaveRequest req,String groupKey) {
 		Map<String,Set<CommonResult>> map = Maps.newHashMap();
 
-		for(String key : req.getTimeValueMap().keySet()){
+        String[] groupKeyArray = StringUtils.split(groupKey,'|');
+        for(String key : req.getTimeValueMap().keySet()){
 			CommonResult result = req.getTimeValueMap().get(key);
-			Object groupValue = null;
-			try {
-				groupValue = PropertyUtils.getProperty(result,groupKey);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			if(groupValue == null) continue;
-			String groupKeyStr = groupValue.toString();
+            List<Object> groupValueList = Lists.newArrayList();
+            try {
+                for(String gkey : groupKeyArray){
+                    groupValueList.add(PropertyUtils.getProperty(result,gkey));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if(groupValueList.isEmpty()) continue;
+            String groupKeyStr = StringUtils.join(groupValueList,'|');
 			if(map.containsKey(groupKeyStr)){
 				map.get(groupKeyStr).add(result);
 			}else{

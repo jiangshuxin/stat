@@ -1,5 +1,6 @@
 package com.handpay.arch.stat.rpc;
 
+import com.handpay.arch.stat.anno.GroupKey;
 import com.handpay.arch.stat.anno.ValueKey;
 import com.handpay.arch.stat.bean.CommonResult;
 
@@ -7,12 +8,17 @@ import java.io.Serializable;
 
 /**
  * Created by sxjiang on 2016/11/1.
+ * 某台机器上某服务某方法的响应时间
  */
 public class DubboRTResult extends CommonResult implements Serializable {
     private static final long serialVersionUID = 1L;
+    @GroupKey(order=10)
+    private String serverHost;
     private String invokePath;
     private String spanId;
+    @GroupKey(order=20)
     private String className;
+    @GroupKey(order=30)
     private String methodName;
     @ValueKey(order=10)
     private String responseTime;
@@ -23,6 +29,14 @@ public class DubboRTResult extends CommonResult implements Serializable {
 
     public void setInvokePath(String invokePath) {
         this.invokePath = invokePath;
+    }
+
+    public String getServerHost() {
+        return serverHost;
+    }
+
+    public void setServerHost(String serverHost) {
+        this.serverHost = serverHost;
     }
 
     public String getSpanId() {
@@ -61,6 +75,7 @@ public class DubboRTResult extends CommonResult implements Serializable {
     public String toString() {
         return "DubboRTResult{" +
                 "invokePath='" + invokePath + '\'' +
+                ", serverHost='" + serverHost + '\'' +
                 ", spanId='" + spanId + '\'' +
                 ", className='" + className + '\'' +
                 ", methodName='" + methodName + '\'' +
