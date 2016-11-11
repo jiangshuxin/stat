@@ -149,6 +149,7 @@ public final class SqlStreamingMain2 {
 					
 					Class<?> targetClass = bean.getTableClass();
 					DataFrame schemaPeople = sqlContext.createDataFrame(t, targetClass);
+					schemaPeople.cache();
 					schemaPeople.registerTempTable(targetClass.getSimpleName());
 					
 					//FIXME sql 处理

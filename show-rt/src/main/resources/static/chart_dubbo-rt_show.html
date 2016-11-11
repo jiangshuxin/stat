@@ -12,19 +12,10 @@
         var queueArray = ['stat-runtime-result-dubboRT-10.48.172.16|com.handpay.auth.service.MenuService|queryByUserIdWithParent',
                             'stat-runtime-result-dubboRT-10.48.194.26|com.handpay.auth.service.MenuService|queryByUserIdWithParent'];
         
-        $(function(){
-        	//window.opener.postMessage({action:'init'},'*');
-        	//self.addEventListener("message", function(event) {
-    			//statObj = event.data;
-    			connect();
-    		//}, false);
-        });
-
         function connect() {
             ws = new WebSocket(url);
 
             ws.onopen = function () {
-            	chartInit();
             	ws.send(JSON.stringify(queueArray));
             };
             ws.onmessage = function (event) {
@@ -103,6 +94,13 @@
                 		    series : [
                 		    ]
                 		};
+                myChart.setOption(option);
+                myChart.on('datazoom',function(params){
+                    for(var k in option.dataZoom){
+                        option.dataZoom[k].start = params.start;
+                        option.dataZoom[k].end = params.end;
+                    }
+                });
         	}
                
         	var timeCount = 0;
@@ -116,7 +114,9 @@
 
                          series.name = [jsonObj.serverHost,jsonObj.className,jsonObj.methodName].join('|');
                          series.dataList.push(jsonObj.responseTime);
-                         dataObj.xAxisDataList.push(jsonObj.hhmmss);
+                         if(option.xAxis[0].data.indexOf(jsonObj.hhmmss) == -1){
+                             dataObj.xAxisDataList.push(jsonObj.hhmmss);
+                         }
                          dataObj.title = jsonObj.yyyyMMdd;
 
                          var seriesList = dataObj.seriesList;
@@ -145,5 +145,14 @@
                          myChart.setOption(option);
                      }
                  }
+
+            $(function(){
+                //window.opener.postMessage({action:'init'},'*');
+                //self.addEventListener("message", function(event) {
+                //statObj = event.data;
+                connect();
+                chartInit();
+                //}, false);
+            });
     </script>
 </html>
