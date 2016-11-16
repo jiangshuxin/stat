@@ -24,7 +24,7 @@ public class WebSocketRegister extends SpringBootServletInitializer
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 //        registry.addHandler(statResultHandler(), "/websock/echo").withSockJS();
-        registry.addHandler(statResultHandler(), "/websock/init.htm");
+        registry.addHandler(statResultHandler(), "/websock/init.htm").setAllowedOrigins("http://localhost:9001","http://10.48.114.14:9001");
         registry.addHandler(chartHandler(), "/websock/chart/show.htm");
     }
 
