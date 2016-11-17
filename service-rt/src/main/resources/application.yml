@@ -6,7 +6,7 @@ server:
 spring:
   profiles: dev
   datasource:
-    url: jdbc:mysql://10.48.193.201:3306/showrt
+    url: jdbc:mysql://10.48.193.201:3306/showrt?useUnicode=true&characterEncoding=utf-8
     username: test
     password: test1234
   jpa:

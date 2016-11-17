@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * Created by fczheng on 2016/10/31.
  */
-public interface ConfigInfoRepository extends JpaRepository<ConfigEntity, Integer> {
+public interface ConfigEntityRepository extends JpaRepository<ConfigEntity, Integer> {
 
 }
