@@ -17,4 +17,6 @@ public interface StreamProvider {
 	
 	Map<String,Map<String,BigDecimal>> sum(String statName,String day,String groupKey,String[] columns);
 	Map<String,Map<String,BigDecimal>> sum(String statName,Date fromDate,Date toDate,String groupKey,String[] columns);
+
+	List<String> findGroupByName(String statName);
 }

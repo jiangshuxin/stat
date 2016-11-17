@@ -11,7 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.handpay.arch.common.ResultVO;
@@ -22,6 +24,7 @@ import com.handpay.arch.stat.provider.StreamProvider;
 
 @Controller
 @RequestMapping({ "/stat" })
+@CrossOrigin(origins = "/**")
 public class StreamAction {
 	private FastDateFormat dateFormat = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
 	@Autowired
@@ -51,8 +54,17 @@ public class StreamAction {
 	
 	@RequestMapping({ "/stats.json" })
 	@ResponseBody
-	public ResultVO<Collection<StatBean>> stats(String statName,String day){
+	public ResultVO<?> stats(@RequestParam(name="statName", required = false) String statName, String day){
+		if(StringUtils.isNotEmpty(statName)) {
+			return ResultVO.buildSucResult(streamManager.findStat(statName));
+		}
 		return ResultVO.buildSucResult(streamManager.stats());
+	}
+
+	@RequestMapping({ "/groupKey.json" })
+	@ResponseBody
+	public ResultVO groupKey(@RequestParam(name="statName") String statName) {
+		return ResultVO.buildSucResult(streamProvider.findGroupByName(statName));
 	}
 	
 	@RequestMapping({ "/sum.json" })

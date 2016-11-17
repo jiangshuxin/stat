@@ -2,6 +2,7 @@ package com.handpay.arch.stat.provider.impl;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.clearspring.analytics.util.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
+import com.handpay.arch.stat.Constants;
 import com.handpay.arch.stat.bean.CommonResult;
 import com.handpay.arch.stat.provider.StreamProvider;
 import com.handpay.rache.core.spring.StringRedisTemplateX;
@@ -95,6 +98,12 @@ public class StreamProviderImpl implements StreamProvider {
 		}
 		Set<String> resultSet = extractResultSet(statName, fromD, toD, duration);
 		return extractColumnMap(resultSet, groupKey,columns);
+	}
+
+	@Override
+	public List<String> findGroupByName(String statName) {
+		Set<String> groupKeySet = stringRedisTemplateX.boundZSetOps(statName + Constants.SEPARATOR_VERTICAL + Constants.REDIS_GROUP_KEY_SET).range(0, -1);
+		return new ArrayList<String>(groupKeySet);
 	}
 
 	private Set<String> extractResultSet(String statName, Double fromD, Double toD, Duration duration) {
