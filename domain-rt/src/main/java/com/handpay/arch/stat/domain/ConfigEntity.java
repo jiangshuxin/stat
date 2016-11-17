@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 /**
  * Created by fczheng on 2016/10/31.
@@ -25,16 +26,12 @@ public class ConfigEntity implements Serializable {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
-    private int type;
+    protected int type;
     @Column(nullable = false, name="table_name")
     private String tableName;
     private String description;
-    @OneToMany(fetch= FetchType.EAGER)
-    @JoinTable(name = "ref_config_kpi",
-            joinColumns = @JoinColumn(name="config_id", referencedColumnName="id"),
-            inverseJoinColumns = @JoinColumn(name="kpi_id", referencedColumnName="id")
-    )
-    private List<MetricKpi> kpiList;
+    @Transient
+    private String kpiNames;
 
     public int getId() {
         return id;
@@ -44,8 +41,8 @@ public class ConfigEntity implements Serializable {
         return name;
     }
 
-    public String getType() {
-        return TYPE.findName(type);
+    public int getType() {
+        return type;
     }
 
     public String getTableName() {
@@ -76,34 +73,11 @@ public class ConfigEntity implements Serializable {
         this.description = description;
     }
 
-    public List<MetricKpi> getKpiList() {
-        return kpiList;
-    }
-    public void setKpiList(List<MetricKpi> kpiList) {
-        this.kpiList = kpiList;
+    public String getKpiNames() {
+        return kpiNames;
     }
 
-    public enum TYPE {
-        SERVER(10001, "服务器监控"),
-        RPC(10002, "RPC信息"),
-        JVM(10003, "JVM"),
-        BUSINESS(10004, "业务数据");
-
-
-        private int id;
-        private String showName;
-        private TYPE(int id, String showName) {
-            this.id = id;
-            this.showName = showName;
-        }
-
-        public static String findName(int tid) {
-            for (TYPE type : TYPE.values()) {
-                if (type.id == tid) {
-                    return type.showName;
-                }
-            }
-            throw new IllegalArgumentException("此配置类型不存在");
-        }
+    public void setKpiNames(String kpiNames) {
+        this.kpiNames = kpiNames;
     }
 }

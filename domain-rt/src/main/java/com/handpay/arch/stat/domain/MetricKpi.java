@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
@@ -16,19 +15,20 @@ public class MetricKpi implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id @GeneratedValue
-    private int id;
-    @Column(name = "short_name")
+    public MetricKpi() {
+    }
+    public MetricKpi(String shortName) {
+        this.shortName = shortName;
+    }
+
+    @Id @Column(name = "short_name")
     private String shortName;
     @Column(name = "english_name")
     private String englishName;
-    @Column(name = "chinese_name")
-    private String chineseName;
+    @Column(name = "display_name")
+    private String displayName;
+    private String description;
     private String unit;
-
-    public int getId() {
-        return id;
-    }
 
     public String getShortName() {
         return shortName;
@@ -38,16 +38,16 @@ public class MetricKpi implements Serializable {
         return englishName;
     }
 
-    public String getChineseName() {
-        return chineseName;
+    public String getDisplayName() {
+        return displayName;
     }
 
     public String getUnit() {
         return unit;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getDescription() {
+        return description;
     }
 
     public void setShortName(String shortName) {
@@ -58,11 +58,15 @@ public class MetricKpi implements Serializable {
         this.englishName = englishName;
     }
 
-    public void setChineseName(String chineseName) {
-        this.chineseName = chineseName;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
