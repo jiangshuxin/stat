@@ -41,7 +41,7 @@
 		fillForm : function(data, options) {
 			var settings = {
 				findbyname : true,
-				restrict : true
+				restrict : true,
 			}, self = this;
 
 			if (options) {
@@ -62,9 +62,7 @@
 							elt.val([ v ]);
 						} else {
 							selector = '[name="' + k + '[]"]';
-							elt = (settings.restrict) ? self.find(selector) : $(selector);
 							elt.each(function() {
-								console.log($(this) + ", " + v)
 								$(this).val(v);
 							});
 						}

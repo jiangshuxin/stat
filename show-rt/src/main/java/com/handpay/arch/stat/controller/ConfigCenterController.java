@@ -2,6 +2,8 @@ package com.handpay.arch.stat.controller;
 
 import com.handpay.arch.stat.domain.ConfigEntity;
 import com.handpay.arch.stat.domain.RPCConfig;
+import com.handpay.arch.stat.domain.dto.AlarmRuleInfo;
+import com.handpay.arch.stat.domain.dto.ConfigInfo;
 import com.handpay.arch.stat.provider.ConfigCenterService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +24,16 @@ public class ConfigCenterController {
     private ConfigCenterService configCenterService;
 
     @GetMapping("/config/all")
-    public List<ConfigEntity> findAll() {
-        return configCenterService.findAll();
+    public List<?> findAll() {
+        List<?> all = configCenterService.findAll();
+        return all;
     }
 
 
     @PostMapping("/config/s")
-    public ConfigEntity save(ConfigEntity configInfo){
-        return configCenterService.save(configInfo);
+    public ConfigEntity save(ConfigInfo configInfo){
+        ConfigEntity ce = configCenterService.save(configInfo);
+        return ce;
     }
 
     @PostMapping("/config/d")
@@ -66,5 +70,16 @@ public class ConfigCenterController {
     @GetMapping("/kpi/all")
     public List<?> findKpi() {
        return configCenterService.findKpi();
+    }
+
+    @GetMapping("/kpi/{configId}/{shortName}")
+    public AlarmRuleInfo findOneKpi(@PathVariable(name = "configId") int configId, @PathVariable(name = "shortName") String shortName) {
+        return configCenterService.findOneKpi(shortName, configId);
+    }
+
+    @PostMapping("kpi/s")
+    public boolean saveKpi(AlarmRuleInfo ruleInfo) {
+        boolean isOk = configCenterService.saveAlarmRule(ruleInfo);
+        return true;
     }
 }

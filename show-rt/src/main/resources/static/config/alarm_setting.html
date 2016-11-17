@@ -8,30 +8,35 @@
   <meta name="keywords" content="table">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="renderer" content="webkit">
-  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta http-equiv="Cache-Control" content="no-siteapp"/>
   <link rel="icon" type="image/png" href="../amaze/assets/i/favicon.png">
   <link rel="apple-touch-icon-precomposed" href="../amaze/assets/i/app-icon72x72@2x.png">
-  <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+  <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
   <link rel="stylesheet" href="../amaze/assets/css/amazeui.min.css"/>
   <link rel="stylesheet" href="../amaze/assets/css/admin.css">
 </head>
 <body>
 <!--[if lte IE 9]>
-<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
-  以获得更好的体验！</p>
+<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请
+  <a href="http://browsehappy.com/" target="_blank">升级浏览器</a> 以获得更好的体验！
+</p>
 <![endif]-->
 
 <header class="am-topbar am-topbar-inverse admin-header">
   <div class="am-topbar-brand">
-    <strong>Amaze UI</strong> <small>后台管理模板</small>
+    <strong>Amaze UI</strong>
+    <small>后台管理模板</small>
   </div>
 
-  <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
+  <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only"
+          data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span>
+    <span class="am-icon-bars"></span></button>
 
   <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
 
     <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
-      <li><a href="javascript:;"><span class="am-icon-envelope-o"></span> 收件箱 <span class="am-badge am-badge-warning">5</span></a></li>
+      <li><a href="javascript:;"><span class="am-icon-envelope-o"></span> 收件箱 <span
+          class="am-badge am-badge-warning">5</span></a></li>
       <li class="am-dropdown" data-am-dropdown>
         <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
           <span class="am-icon-users"></span> 管理员 <span class="am-icon-caret-down"></span>
@@ -42,7 +47,9 @@
           <li><a href="#"><span class="am-icon-power-off"></span> 退出</a></li>
         </ul>
       </li>
-      <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen"><span class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a></li>
+      <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen"><span
+          class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a>
+      </li>
     </ul>
   </div>
 </header>
@@ -52,104 +59,266 @@
   <div class="admin-content">
     <div class="admin-content-body">
       <div class="am-cf am-padding am-padding-bottom-0">
-        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">配置中心</strong> /<small>告警设置</small></div>
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">配置中心</strong> /
+          <small>告警设置</small>
+        </div>
       </div>
 
-      <hr>
+      <div class="am-tabs am-margin" data-am-tabs>
+        <div class="am-g am-margin-top-sm">
+          <div class="am-u-sm-4 am-u-md-2 am-text-right">
+            监控指标
+          </div>
+          <div class="am-u-sm-8 am-u-md-4 am-u-end">
+            <select data-am-selected="{btnSize: 'sm'}" id="kpi" name="sname">
+              <option value="makeChoice"> 请选择 </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <form class="am-form" id="kpi-form" method="post">
+        <input type="hidden" name="id">
+        <input type="hidden" name="configId" id="configId">
 
         <div class="am-tabs am-margin" data-am-tabs>
-            <ul class="am-tabs-nav am-nav am-nav-tabs">
-                <li class="am-active"><a href="#tab1">基本信息</a></li>
-            </ul>
+          <ul class="am-tabs-nav am-nav am-nav-tabs">
+            <li><a href="#tab1">基本信息</a></li>
+            <li class="am-active"><a href="#tab2">规则设置</a></li>
+          </ul>
 
-            <div class="am-tabs-bd">
-                <div class="am-tab-panel am-fade am-in am-active" id="tab1">
-                    <form class="am-form" id="config-form" method="post">
-                        <div class="am-g am-margin-top">
-                            <div class="am-u-sm-4 am-u-md-2 am-text-right">所属业务</div>
-                            <div class="am-u-sm-8 am-u-md-10">
-                                <select data-am-selected="{btnSize: 'sm'}" name="businessLine">
-                                    <option value="TOP">TOP</option>
-                                    <option value="IBS">IBS</option>
-                                    <option value="ICS">ICS</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="am-g am-margin-top-sm">
-                            <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                对应实例
-                            </div>
-                            <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                                <input type="text" class="am-input-sm" name="appInstance">
-                            </div>
-                        </div>
-
-                        <div class="am-g am-margin-top-sm">
-                            <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                应用名
-                            </div>
-                            <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                                <input type="text" class="am-input-sm" name="appName">
-                            </div>
-                        </div>
-
-                        <div class="am-g am-margin-top-sm">
-                            <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                服务名
-                            </div>
-                            <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                                <input type="text" class="am-input-sm" name="serviceName">
-                            </div>
-                        </div>
-
-                        <div class="am-g am-margin-top-sm">
-                            <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                方法名
-                            </div>
-                            <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                                <input type="text" class="am-input-sm" name="methodName">
-                            </div>
-                        </div>
-                    </form>
+          <div class="am-tabs-bd">
+            <div class="am-tab-panel am-fade" id="tab1">
+              <div class="am-g am-margin-top-sm">
+                <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                  指标简称
                 </div>
+                <div class="am-u-sm-8 am-u-md-4 am-u-end">
+                  <input type="text" class="am-input-sm" name="metricKpi.shortName" id="shortName" readonly>
+                </div>
+              </div>
+
+              <div class="am-g am-margin-top-sm">
+                <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                  展示名
+                </div>
+                <div class="am-u-sm-8 am-u-md-4 am-u-end">
+                  <input type="text" class="am-input-sm" name="metricKpi.displayName" id="displayName">
+                </div>
+              </div>
+
+              <div class="am-g am-margin-top-sm">
+                <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                  英文名
+                </div>
+                <div class="am-u-sm-8 am-u-md-4 am-u-end">
+                  <input type="text" class="am-input-sm" name="metricKpi.englishName" id="englishName">
+                </div>
+              </div>
+
+              <div class="am-g am-margin-top-sm">
+                <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                  描述信息
+                </div>
+                <div class="am-u-sm-8 am-u-md-4 am-u-end">
+                  <textarea rows="4" name="metricKpi.description" id="description"></textarea>
+                </div>
+              </div>
+
+              <div class="am-g am-margin-top-sm">
+                <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                  单位
+                </div>
+                <div class="am-u-sm-8 am-u-md-4 am-u-end">
+                  <input type="text" class="am-input-sm" name="metricKpi.unit" id="unit">
+                </div>
+              </div>
+            </div>
+
+            <div class="am-tab-panel am-fade am-in am-active" id="tab2">
+              <div class="am-g am-margin-top-sm">
+                <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                  Group-Key
+                </div>
+                <div class="am-u-sm-8 am-u-md-4 am-u-end">
+                  <select multiple data-am-selected="{btnSize: 'sm'}" id="groupKey" name="groupKey">
+                  </select>
+                </div>
+              </div>
+              <div class="am-g am-margin-top-sm">
+                <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                  Value-Key
+                </div>
+                <div class="am-u-sm-8 am-u-md-4 am-u-end">
+                  <select data-am-selected="{btnSize: 'sm'}" id="valueKey" name="valueKey">
+                  </select>
+                </div>
+              </div>
+
+              <div class="am-g am-margin-top-sm">
+                <div class="am-u-sm-4 am-u-md-2 am-text-right">预警阈值</div>
+                <div class="am-u-sm-4 am-u-md-2">
+                  <select data-am-selected="{btnSize: 'sm', btnWidth: '60%'}" name="rule" id="rule">
+                    <option value=""> 请选择 </option>
+                    <option value=">">  &gt; </option>
+                    <option value="<">  &lt; </option>
+                    <option value="=">  = </option>
+                    <option value=">=">  &ge; </option>
+                    <option value="<=">  &le; </option>
+                  </select>
+                </div>
+                <div class="am-u-sm-4 am-u-md-2 am-u-end">
+                  <input type="number" class="am-input-sm" min="0" name="threshold">
+                </div>
+                <div class="am-u-sm-4 am-u-md-2 second">
+                  <select data-am-selected="{btnSize: 'sm', btnWidth: '60%'}" name="ruleAnother">
+                    <option value=""> 请选择 </option>
+                    <option value=">">  &gt; </option>
+                    <option value="<">  &lt; </option>
+                    <option value="=">  = </option>
+                    <option value=">=">  &ge; </option>
+                    <option value="<=">  &le; </option>
+                  </select>
+                </div>
+                <div class="am-u-sm-4 am-u-md-2 am-u-end second">
+                  <input type="number" class="am-input-sm" min="0" name="thresholdAnother">
+                </div>
+                <input type="button" value="+" id="plusThreshold">
+                <input type="button" value="-" id="minusThreshold" class="second">
+              </div>
+
+              <div class="am-g am-margin-top-sm">
+                <div class="am-u-sm-4 am-u-md-2 am-text-right">通知方式</div>
+                <div class="am-u-sm-8 am-u-md-4 am-u-end">
+                  <select data-am-selected="{btnSize: 'sm'}" name="noticeWay" id="noticeWay">
+                    <option value="Email">Email</option>
+                    <option value="SMS">SMS</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="am-g am-margin-top-sm">
+                <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                  接收人
+                </div>
+                <div class="am-u-sm-8 am-u-md-4 am-u-end">
+                  <input type="text" class="am-input-sm" name="userList[0].userId">
+                </div>
+                <input type="button" value="+" id="userIds">
+              </div>
+
+              <div class="am-g am-margin-top-sm">
+                <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                  重试次数
+                </div>
+                <div class="am-u-sm-8 am-u-md-4 am-u-end">
+                  <input type="number" class="am-input-sm" name="retryTime">
+                </div>
+              </div>
 
             </div>
-        </div>
 
-        <div class="am-margin">
-            <button type="button" class="am-btn am-btn-primary am-btn-xs" id="submitSave">提交保存</button>
-            <button type="button" class="am-btn am-btn-primary am-btn-xs" id="quitSave">放弃保存</button>
+          </div>
         </div>
+      </form>
+
+      <div class="am-margin">
+        <button type="button" class="am-btn am-btn-primary am-btn-xs" id="submitSave">提交保存
+        </button>
+        <button type="button" class="am-btn am-btn-primary am-btn-xs" id="quitSave">放弃保存
+        </button>
+      </div>
     </div>
   </div>
 </div>
 <script src="../amaze/assets/js/jquery.min.js"></script>
+<script src="../amaze/assets/js/jquery.serializejson.js"></script>
 <script src="../amaze/assets/js/amazeui.min.js"></script>
 <script src="../amaze/assets/js/app.js"></script>
 <script src="../amaze/assets/js/plugins.js"></script>
 <script>
-  $(function(){
-    var id = parseSearch()["id"];
+  $().ready(function () {
+    $('.second').hide();
+
+    $('#plusThreshold').click(function () {
+      $('.second').show();
+      $(this).hide();
+    });
+
+    $('#minusThreshold').click(function () {
+      $('.second').hide();
+      $("#plusThreshold").show();
+    });
+
+    $("#configId").val(parseSearch()["id"]);
+
+    var shortNames = parseSearch()["kpi"];
+    var nameArr = shortNames.split(",");
+    $.each(nameArr, function (i, v) {
+      $("#kpi").append('<option value="' + v +'">' + v + '</option>');
+    });
+
+    $("#kpi").change(function () {
+      var shortName = $(this).val();
+      if(shortName != 'makeChoice') {
+        $.getJSON(getContextPath() + "/kpi/" + $("#configId").val() + "/" + shortName, function (data) {
+          ruleReset();
+          console.log(data);
+          //1. 填充基本信息
+          var options = { findbyname : false, restrict : true };
+          $("#kpi-form").fillForm( data.metricKpi, options );
+
+          //2. 填充规则初始化信息
+          $.each(data.groupKeyList, function (i, v) {
+            $("#groupKey").append('<option value="' + v +'">' + v + '</option>');
+          });
+          $.each(data.valueKeyList, function (i, v) {
+            $("#valueKey").append('<option value="' + v +'">' + v + '</option>');
+          });
+
+          //3. 填充保存信息
+          $('#rule').selected('destroy');
+          $('#ruleAnother').selected('destroy');
+          $('#noticeWay').selected('destroy');
+          $("#kpi-form").fillForm( data );
+//          $('#rule').selected('destroy');  //amaze-ui-keng
+//          $('#rule').selected(data.rule);
+//          $('#ruleAnother').selected('destroy');
+//          $('#ruleAnother').selected(data.ruleAnother);
+//          $('#noticeWay').selected('destroy');
+//          $('#noticeWay').selected(data.noticeWay);
+        });
+      }
+    });
+
+    function ruleReset() {
+      $("#kpi-form")[0].reset();
+      $("#groupKey").empty();
+      $("#valueKey").empty();
+    }
 
     $("#quitSave").click(function () {
-        window.location.href = getContextPath() + "/config/list.html";
+      window.location.href = getContextPath() + "/config/list.html";
     });
 
     $("#submitSave").click(function () {
+      var shortName = $("#kpi").val();
+      console.log(JSON.stringify($('#kpi-form').serializeJSON()));
+      if(shortName != 'makeChoice') {
         $.ajax({
            cache: true,
            type: "POST",
-           url: getContextPath() + "/config/rpc/s",
-           data: $('#config-form').serialize(),
+           url: getContextPath() + "/kpi/s",
+           data: $('#kpi-form').serialize(),
            async: true,
            error: function (request) {
-               alert("Connection error");
+             alert("Connection error");
            },
            success: function (data) {
-               window.location.href = getContextPath() + "/config/list.html";
+             window.location.href = getContextPath() + "/config/list.html";
            }
-       });
+        });
+      }
     });
   });
 </script>

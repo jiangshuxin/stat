@@ -106,10 +106,10 @@
 
                         <div class="am-g am-margin-top-sm">
                             <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                指标绑定
+                                监控指标
                             </div>
                             <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                                <select multiple data-am-selected="{dropUp: 1, btnWidth: '80%', btnSize: 'sm'}" name="kpiList" id="kpi">
+                                <select multiple required data-am-selected="{dropUp: 1, btnWidth: '80%', btnSize: 'sm'}" id="kpi" name="kpiNames">
                                 </select>
                             </div>
                         </div>
@@ -138,13 +138,13 @@
     });
 
     $("#submitSave").click(function () {
-        alert($('#config-form').serialize());
-        return;
+        var data = $('#config-form').serialize();
+        console.log(data);
         $.ajax({
            cache: true,
            type: "POST",
            url: getContextPath() + "/config/s",
-           data: $('#config-form').serialize(),
+           data: data,
            async: true,
            error: function (request) {
                alert("Connection error");
@@ -166,7 +166,7 @@
            },
            success: function (data) {
                $.each(data, function(i, v){
-                   $("#kpi").append('<option value="' + v.id +'">' + v.shortName + '</option>');
+                   $("#kpi").append('<option value="' + v.shortName +'">' + v.shortName + '</option>');
                });
            }
        });
