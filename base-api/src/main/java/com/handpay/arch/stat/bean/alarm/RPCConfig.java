@@ -1,31 +1,19 @@
-package com.handpay.arch.stat.domain;
+package com.handpay.arch.stat.domain.dto;
 
 import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
 /**
  * Created by fczheng on 2016/10/31.
  */
-@Entity(name="rpc_config")
 public class RPCConfig implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id @GeneratedValue
     private int id;
-    @Column(name = "business_line")
     private String businessLine;
-    @Column(name = "app_instance")
     private String appInstance;
-    @Column(name = "app_name")
     private String appName;
-    @Column(name = "service_name")
     private String serviceName;
-    @Column(name = "method_name")
     private String methodName;
 
     public int getId() {

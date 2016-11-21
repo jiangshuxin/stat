@@ -1,24 +1,16 @@
-package com.handpay.arch.stat.domain;
+package com.handpay.arch.stat.domain.dto;
 
 import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
 /**
  * Created by fczheng on 2016/11/11.
  */
-@Entity
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id @Column(name = "user_id")
     private String userId;
-    @Column(name = "user_name")
     private String userName;
-    @Column(name = "chinese_name")
     private String chineseName;
     private String email;
     private String phone;

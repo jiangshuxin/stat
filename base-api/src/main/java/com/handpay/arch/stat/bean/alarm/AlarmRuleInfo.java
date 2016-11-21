@@ -1,12 +1,7 @@
 package com.handpay.arch.stat.domain.dto;
 
-import com.handpay.arch.stat.domain.MetricKpi;
-import com.handpay.arch.stat.domain.User;
-
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by fczheng on 2016/11/15.

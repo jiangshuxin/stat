@@ -1,18 +1,11 @@
-package com.handpay.arch.stat.domain;
+package com.handpay.arch.stat.domain.dto;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
 /**
- * Created by fczheng on 2016/11/7.
+ * Created by fczheng on 2016/11/17.
  */
-
-@Entity(name = "metric_kpi")
 public class MetricKpi implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     public MetricKpi() {
@@ -21,11 +14,8 @@ public class MetricKpi implements Serializable {
         this.shortName = shortName;
     }
 
-    @Id @Column(name = "short_name")
     private String shortName;
-    @Column(name = "english_name")
     private String englishName;
-    @Column(name = "display_name")
     private String displayName;
     private String description;
     private String unit;
@@ -34,39 +24,39 @@ public class MetricKpi implements Serializable {
         return shortName;
     }
 
-    public String getEnglishName() {
-        return englishName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
     public void setShortName(String shortName) {
         this.shortName = shortName;
+    }
+
+    public String getEnglishName() {
+        return englishName;
     }
 
     public void setEnglishName(String englishName) {
         this.englishName = englishName;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
 
-    public void setUnit(String unit) {
-        this.unit = unit;
+    public String getDescription() {
+        return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 }

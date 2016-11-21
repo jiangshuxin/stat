@@ -1,4 +1,4 @@
-package com.handpay.arch.stat.domain;
+package com.handpay.arch.stat.config.entity;
 
 import java.io.Serializable;
 

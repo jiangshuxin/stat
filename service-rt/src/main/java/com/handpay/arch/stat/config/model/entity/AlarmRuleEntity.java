@@ -1,4 +1,4 @@
-package com.handpay.arch.stat.domain;
+package com.handpay.arch.stat.config.entity;
 
 import java.io.Serializable;
 
@@ -11,7 +11,7 @@ import javax.persistence.Id;
  * Created by fczheng on 2016/11/11.
  */
 @Entity(name = "alarm_rule")
-public class AlarmRule implements Serializable {
+public class AlarmRuleEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
