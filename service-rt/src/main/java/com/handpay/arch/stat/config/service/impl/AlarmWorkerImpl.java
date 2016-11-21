@@ -1,8 +1,12 @@
 package com.handpay.arch.stat.config.service.impl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.handpay.arch.stat.bean.CommonResult;
 import com.handpay.arch.stat.bean.StatBean;
-import com.handpay.arch.stat.config.model.CheckData;
 import com.handpay.arch.stat.config.model.MetricChecker;
 import com.handpay.arch.stat.config.model.entity.AlarmEntity;
 import com.handpay.arch.stat.config.model.entity.AlarmRuleEntity;
@@ -10,35 +14,34 @@ import com.handpay.arch.stat.config.repository.AlarmRepository;
 import com.handpay.arch.stat.config.repository.AlarmRuleRepository;
 import com.handpay.arch.stat.config.service.AlarmWorker;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 /**
  * Created by fczheng on 2016/11/17.
  */
 @Service
 public class AlarmWorkerImpl implements AlarmWorker {
-    @Autowired
-    private AlarmRuleRepository ruleRepository;
-    @Autowired
-    private AlarmRepository alarmRepository;
+	@Autowired
+	private AlarmRuleRepository ruleRepository;
+	@Autowired
+	private AlarmRepository alarmRepository;
 
-    @Override
-    public void checkKpi(StatBean statBean, CommonResult result) {
-        if (result == null) return;
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void checkKpi(StatBean statBean, CommonResult result) {
+		if (result == null)
+			return;
+		MetricChecker checker = new MetricChecker(statBean.getResultClass(), result);
 
-        // 1.分析监控数据
-        CheckData checkData = MetricChecker.refine(statBean.getResultClass(), result);
+		// 1.分析监控数据
+		checker.refine();
 
-        // 2.取出监控数据相关规则
-        List<AlarmRuleEntity> ruleList = ruleRepository.findByKpiShortNameAndValueKeyIn(statBean.getName(), checkData.getValueMap().keySet());
+		// 2.取出监控数据相关规则
+		List<AlarmRuleEntity> ruleList = ruleRepository.findByKpiShortNameAndValueKeyIn(statBean.getName(), checker.getValueMap().keySet());
 
-        // 3.根据规则判断是否预警
-        List<AlarmEntity> alarmList = MetricChecker.check(checkData, ruleList);
-        // 4.将预警数据信息写入数据库
-        alarmRepository.save(alarmList);
-    }
+		// 3.根据规则判断是否预警
+		checker.check(ruleList);
+		List<AlarmEntity> alarms = checker.getAlarms();
+		// 4.将预警数据信息写入数据库
+		alarmRepository.save(alarms);
+	}
 
 }

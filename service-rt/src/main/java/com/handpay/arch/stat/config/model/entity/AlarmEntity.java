@@ -1,6 +1,6 @@
 package com.handpay.arch.stat.config.model.entity;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,9 +19,9 @@ public class AlarmEntity {
     private int ruleId;
     private String content;
     @Column(name="alarm_time")
-    private Date alarmTime;
+    private Timestamp alarmTime;
     @Column(name="update_time")
-    private Date updateTime;
+    private Timestamp updateTime;
     @Column(name="send_state")
     private int sendState;
     @Column(name="send_number")
@@ -51,19 +51,19 @@ public class AlarmEntity {
         this.content = content;
     }
 
-    public Date getAlarmTime() {
+    public Timestamp getAlarmTime() {
         return alarmTime;
     }
 
-    public void setAlarmTime(Date alarmTime) {
+    public void setAlarmTime(Timestamp alarmTime) {
         this.alarmTime = alarmTime;
     }
 
-    public Date getUpdateTime() {
+    public Timestamp getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(Timestamp updateTime) {
         this.updateTime = updateTime;
     }
 

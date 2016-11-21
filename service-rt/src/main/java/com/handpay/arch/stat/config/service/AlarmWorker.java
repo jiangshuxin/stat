@@ -7,5 +7,6 @@ import com.handpay.arch.stat.bean.StatBean;
  * Created by fczheng on 2016/11/17.
  */
 public interface AlarmWorker {
-    void checkKpi(StatBean statBean, CommonResult result);
+    @SuppressWarnings("rawtypes")
+	void checkKpi(StatBean statBean, CommonResult result);
 }

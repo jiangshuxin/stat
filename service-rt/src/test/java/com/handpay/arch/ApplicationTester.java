@@ -1,29 +1,23 @@
 package com.handpay.arch;
 
-import com.handpay.rache.core.spring.StringRedisTemplateX;
+import com.handpay.arch.stat.config.service.AlarmWorkerTester;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Set;
+import junit.framework.JUnit4TestAdapter;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * Created by fczheng on 2016/11/14.
  */
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class ApplicationTester {
 
-    @Autowired
-    private StringRedisTemplateX stringRedisTemplateX;
-
-    @Test
-    public void testRedisZSet() {
-        Set<String> s1 = stringRedisTemplateX.boundZSetOps("dubboRT|GroupKeySet").range(0, -1);
-        Set<String> s2 = stringRedisTemplateX.boundZSetOps("dubboQPS|GroupKeySet").range(0, -1);
-    }
+	/**
+	 * @return the suite of tests being tested
+	 */
+	public static Test suite() {
+		TestSuite suite = new TestSuite("TestSuite for app");
+		suite.addTest(new JUnit4TestAdapter(AlarmWorkerTester.class));
+		return suite;
+	}
 }

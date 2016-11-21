@@ -139,7 +139,8 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
 
 
     /******************************** kpi/alarm ***********************************/
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public List<MetricKpi> findKpi() {
         Collection<StatBean> stats = streamManager.stats();
         List<MetricKpi> kpis = Lists.newArrayList();
@@ -151,7 +152,8 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
         return kpis;
     }
 
-    @Override
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
     public AlarmRuleInfo findOneKpi(String shortName, int configId) {
         MetricKpi kpi = new MetricKpi();
         MetricKpiEntity kpiEntity = kpiRepo.findOne(shortName);
