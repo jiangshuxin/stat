@@ -1,6 +1,6 @@
 package com.handpay.arch.stat.config.repository.jdbc;
 
-import com.handpay.arch.stat.domain.ConfigEntity;
+import com.handpay.arch.stat.config.model.entity.ConfigEntity;
 
 import java.util.List;
 

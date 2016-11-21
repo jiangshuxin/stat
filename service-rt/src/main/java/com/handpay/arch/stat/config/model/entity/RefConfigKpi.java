@@ -1,4 +1,4 @@
-package com.handpay.arch.stat.config.entity;
+package com.handpay.arch.stat.config.model.entity;
 
 import java.io.Serializable;
 

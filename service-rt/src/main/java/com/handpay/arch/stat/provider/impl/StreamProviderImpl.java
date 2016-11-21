@@ -23,7 +23,7 @@ import com.clearspring.analytics.util.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import com.handpay.arch.stat.Constants;
+import com.handpay.arch.common.Constants;
 import com.handpay.arch.stat.bean.CommonResult;
 import com.handpay.arch.stat.provider.StreamProvider;
 import com.handpay.rache.core.spring.StringRedisTemplateX;

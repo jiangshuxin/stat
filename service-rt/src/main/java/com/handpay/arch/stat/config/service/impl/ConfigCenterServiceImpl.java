@@ -3,8 +3,19 @@ package com.handpay.arch.stat.config.service.impl;
 
 import com.google.common.collect.Lists;
 
-import com.handpay.arch.stat.Constants;
+import com.handpay.arch.common.Constants;
 import com.handpay.arch.stat.bean.StatBean;
+import com.handpay.arch.stat.bean.alarm.AlarmRuleInfo;
+import com.handpay.arch.stat.bean.alarm.ConfigInfo;
+import com.handpay.arch.stat.bean.alarm.MetricKpi;
+import com.handpay.arch.stat.bean.alarm.RPCConfig;
+import com.handpay.arch.stat.bean.alarm.User;
+import com.handpay.arch.stat.config.model.entity.AlarmRuleEntity;
+import com.handpay.arch.stat.config.model.entity.ConfigEntity;
+import com.handpay.arch.stat.config.model.entity.MetricKpiEntity;
+import com.handpay.arch.stat.config.model.entity.RPCConfigEntity;
+import com.handpay.arch.stat.config.model.entity.RefConfigKpi;
+import com.handpay.arch.stat.config.model.entity.RefRuleUser;
 import com.handpay.arch.stat.config.repository.AlarmRuleRepository;
 import com.handpay.arch.stat.config.repository.ConfigEntityRepository;
 import com.handpay.arch.stat.config.repository.KpiRepository;
@@ -12,18 +23,9 @@ import com.handpay.arch.stat.config.repository.RPCConfigRepository;
 import com.handpay.arch.stat.config.repository.RefConfigKpiRepository;
 import com.handpay.arch.stat.config.repository.RefRuleUserRepository;
 import com.handpay.arch.stat.config.repository.jdbc.JdbcRepository;
-import com.handpay.arch.stat.domain.AlarmRule;
-import com.handpay.arch.stat.domain.ConfigEntity;
-import com.handpay.arch.stat.domain.MetricKpi;
-import com.handpay.arch.stat.domain.RPCConfig;
-import com.handpay.arch.stat.domain.RefConfigKpi;
-import com.handpay.arch.stat.domain.RefRuleUser;
-import com.handpay.arch.stat.domain.User;
-import com.handpay.arch.stat.domain.dto.AlarmRuleInfo;
-import com.handpay.arch.stat.domain.dto.ConfigInfo;
 import com.handpay.arch.stat.manager.StreamManager;
 import com.handpay.arch.stat.provider.ConfigCenterService;
-import com.handpay.rache.core.spring.StringRedisTemplateX;
+import com.handpay.arch.stat.provider.StreamProvider;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -35,7 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by fczheng on 2016/10/31.
@@ -62,7 +63,7 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
     @Autowired
     private StreamManager streamManager;
     @Autowired
-    private StringRedisTemplateX stringRedisTemplateX;
+    private StreamProvider streamProvider;
 
     @Override
     public List<ConfigInfo> findAll() {
@@ -77,14 +78,15 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
     }
 
     @Override
-    public ConfigEntity save(ConfigInfo configInfo) {
+    public ConfigInfo save(ConfigInfo configInfo) {
         ConfigEntity entity = new ConfigEntity();
         BeanUtils.copyProperties(configInfo, entity);
         entity = configInfoRepo.save(entity);
 
         saveRef(configInfo.getKpiNames().split(Constants.SEPARATOR_COMMA), entity.getId());
 
-        return entity;
+        configInfo.setId(entity.getId());
+        return configInfo;
     }
 
     private void saveRef(String[] kpiArr, int configId) {
@@ -107,8 +109,12 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
     /******************************** RPC *****************************************/
     @Override
     public Object saveSpecific(Object config) {
-        if (config instanceof RPCConfig)
-            return rpcConfigRepo.save((RPCConfig) config);
+        if (config instanceof RPCConfig) {
+            RPCConfigEntity entity = new RPCConfigEntity();
+            BeanUtils.copyProperties((RPCConfig) config, entity);
+            return rpcConfigRepo.save(entity);
+        }
+
         throw new IllegalArgumentException("暂时不支持该类型!!");
     }
 
@@ -124,8 +130,11 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
 
     @Override
     public List<?> findRPC(RPCConfig rpcConfig) {
+        RPCConfigEntity entity =  new RPCConfigEntity();
+        BeanUtils.copyProperties(rpcConfig, entity);
+
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("id");
-        return rpcConfigRepo.findAll(Example.of(rpcConfig, matcher));
+        return rpcConfigRepo.findAll(Example.of(entity, matcher));
     }
 
 
@@ -144,16 +153,17 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
 
     @Override
     public AlarmRuleInfo findOneKpi(String shortName, int configId) {
-        MetricKpi kpi = kpiRepo.findOne(shortName);
-        if (kpi == null)
-            kpi = new MetricKpi(shortName);
+        MetricKpi kpi = new MetricKpi();
+        MetricKpiEntity kpiEntity = kpiRepo.findOne(shortName);
+        if (kpiEntity == null)
+            kpiEntity = new MetricKpiEntity(shortName);
+        BeanUtils.copyProperties(kpiEntity, kpi);
 
-        AlarmRule entity = alarmRuleRepository.findByKpiShortNameAndConfigId(shortName, configId);
+        AlarmRuleEntity entity = alarmRuleRepository.findByKpiShortNameAndConfigId(shortName, configId);
 
         AlarmRuleInfo info = new AlarmRuleInfo();
         StatBean stat = streamManager.findStat(shortName);
-        Set<String> groupKeySet = stringRedisTemplateX.boundZSetOps(shortName + Constants.SEPARATOR_VERTICAL + Constants.REDIS_GROUP_KEY_SET).range(0, -1);
-        info.setGroupKeyList(Lists.<String>newArrayList(groupKeySet));
+        info.setGroupKeyList(streamProvider.findGroupByName(shortName));
         info.setValueKeyList(stat.getValueKeyList());
         info.setMetricKpi(kpi);
         if (entity != null) {
@@ -172,7 +182,7 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
     @Transactional
     public boolean saveAlarmRule(AlarmRuleInfo ruleInfo) {
         try {
-            AlarmRule ruleEntity = new AlarmRule();
+            AlarmRuleEntity ruleEntity = new AlarmRuleEntity();
             BeanUtils.copyProperties(ruleInfo, ruleEntity);
             if(StringUtils.isNotEmpty(ruleInfo.getThreshold()))
                 ruleEntity.setThreshold(Float.parseFloat(ruleInfo.getThreshold()));
@@ -181,7 +191,9 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
             ruleEntity.setKpiShortName(ruleInfo.getMetricKpi().getShortName());
             alarmRuleRepository.save(ruleEntity);  //保存规则
 
-            kpiRepo.save(ruleInfo.getMetricKpi());  //保存指标
+            MetricKpiEntity kpiEntity = new MetricKpiEntity();
+            BeanUtils.copyProperties(ruleInfo.getMetricKpi(), kpiEntity);
+            kpiRepo.save(kpiEntity);  //保存指标
 
             List<RefRuleUser> refList = Lists.newArrayList();
             for (User user: ruleInfo.getUserList()) {

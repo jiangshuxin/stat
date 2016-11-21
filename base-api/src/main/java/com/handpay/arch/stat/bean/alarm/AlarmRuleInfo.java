@@ -1,4 +1,4 @@
-package com.handpay.arch.stat.domain.dto;
+package com.handpay.arch.stat.bean.alarm;
 
 import java.io.Serializable;
 import java.util.List;

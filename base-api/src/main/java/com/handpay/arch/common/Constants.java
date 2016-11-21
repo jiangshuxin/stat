@@ -1,4 +1,4 @@
-package com.handpay.arch.stat;
+package com.handpay.arch.common;
 
 /**
  * Created by fczheng on 2016/11/14.

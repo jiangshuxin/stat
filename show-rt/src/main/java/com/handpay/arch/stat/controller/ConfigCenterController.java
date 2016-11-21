@@ -1,9 +1,9 @@
 package com.handpay.arch.stat.controller;
 
-import com.handpay.arch.stat.domain.ConfigEntity;
-import com.handpay.arch.stat.domain.RPCConfig;
-import com.handpay.arch.stat.domain.dto.AlarmRuleInfo;
-import com.handpay.arch.stat.domain.dto.ConfigInfo;
+
+import com.handpay.arch.stat.bean.alarm.AlarmRuleInfo;
+import com.handpay.arch.stat.bean.alarm.ConfigInfo;
+import com.handpay.arch.stat.bean.alarm.RPCConfig;
 import com.handpay.arch.stat.provider.ConfigCenterService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,8 @@ public class ConfigCenterController {
 
 
     @PostMapping("/config/s")
-    public ConfigEntity save(ConfigInfo configInfo){
-        ConfigEntity ce = configCenterService.save(configInfo);
+    public ConfigInfo save(ConfigInfo configInfo){
+        ConfigInfo ce = configCenterService.save(configInfo);
         return ce;
     }
 

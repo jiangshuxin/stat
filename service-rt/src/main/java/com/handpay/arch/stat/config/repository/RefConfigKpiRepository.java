@@ -1,6 +1,6 @@
 package com.handpay.arch.stat.config.repository;
 
-import com.handpay.arch.stat.domain.RefConfigKpi;
+import com.handpay.arch.stat.config.model.entity.RefConfigKpi;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

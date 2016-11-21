@@ -39,11 +39,6 @@
 			<artifactId>app-ext</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-        <dependency>
-            <groupId>com.handpay</groupId>
-            <artifactId>domain-rt</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 		<dependency>
 			<groupId>com.handpay</groupId>
 			<artifactId>rache</artifactId>

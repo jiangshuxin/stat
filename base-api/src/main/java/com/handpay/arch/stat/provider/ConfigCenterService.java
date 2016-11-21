@@ -1,10 +1,10 @@
-package com.handpay.arch.stat.api;
+package com.handpay.arch.stat.provider;
 
 
-import com.handpay.arch.stat.domain.dto.AlarmRuleInfo;
-import com.handpay.arch.stat.domain.dto.ConfigInfo;
-import com.handpay.arch.stat.domain.dto.MetricKpi;
-import com.handpay.arch.stat.domain.dto.RPCConfig;
+import com.handpay.arch.stat.bean.alarm.AlarmRuleInfo;
+import com.handpay.arch.stat.bean.alarm.ConfigInfo;
+import com.handpay.arch.stat.bean.alarm.MetricKpi;
+import com.handpay.arch.stat.bean.alarm.RPCConfig;
 
 import java.util.List;
 

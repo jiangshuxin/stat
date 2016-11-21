@@ -1,4 +1,4 @@
-package com.handpay.arch.stat.config.repository;
+package com.handpay.arch.stat.config.model.entity;
 
 import java.sql.Date;
 

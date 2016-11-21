@@ -1,6 +1,6 @@
 package com.handpay.arch.stat.config.repository;
 
-import com.handpay.arch.stat.domain.RefRuleUser;
+import com.handpay.arch.stat.config.model.entity.RefRuleUser;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
