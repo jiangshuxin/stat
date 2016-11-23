@@ -9,7 +9,7 @@ import javax.persistence.Id;
 /**
  * Created by fczheng on 2016/11/11.
  */
-@Entity
+@Entity(name = "user")
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -23,6 +23,7 @@ public class UserEntity implements Serializable {
     private String email;
     private String phone;
     private String memo;
+    private String dep;
 
     public String getUserId() {
         return userId;
@@ -70,5 +71,13 @@ public class UserEntity implements Serializable {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    public String getDep() {
+        return dep;
+    }
+
+    public void setDep(String dep) {
+        this.dep = dep;
     }
 }

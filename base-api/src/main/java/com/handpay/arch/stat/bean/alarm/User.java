@@ -15,6 +15,8 @@ public class User implements Serializable {
     private String email;
     private String phone;
     private String memo;
+    private String dep;
+    private boolean selected;
 
     public String getUserId() {
         return userId;
@@ -62,5 +64,21 @@ public class User implements Serializable {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    public String getDep() {
+        return dep;
+    }
+
+    public void setDep(String dep) {
+        this.dep = dep;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

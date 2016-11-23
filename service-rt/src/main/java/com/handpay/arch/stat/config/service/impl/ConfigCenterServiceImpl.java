@@ -9,19 +9,21 @@ import com.handpay.arch.stat.bean.alarm.AlarmRuleInfo;
 import com.handpay.arch.stat.bean.alarm.ConfigInfo;
 import com.handpay.arch.stat.bean.alarm.MetricKpi;
 import com.handpay.arch.stat.bean.alarm.RPCConfig;
-import com.handpay.arch.stat.bean.alarm.User;
+import com.handpay.arch.stat.bean.alarm.Select;
 import com.handpay.arch.stat.config.model.entity.AlarmRuleEntity;
 import com.handpay.arch.stat.config.model.entity.ConfigEntity;
 import com.handpay.arch.stat.config.model.entity.MetricKpiEntity;
 import com.handpay.arch.stat.config.model.entity.RPCConfigEntity;
 import com.handpay.arch.stat.config.model.entity.RefConfigKpi;
 import com.handpay.arch.stat.config.model.entity.RefRuleUser;
+import com.handpay.arch.stat.config.model.entity.UserEntity;
 import com.handpay.arch.stat.config.repository.AlarmRuleRepository;
 import com.handpay.arch.stat.config.repository.ConfigEntityRepository;
 import com.handpay.arch.stat.config.repository.KpiRepository;
 import com.handpay.arch.stat.config.repository.RPCConfigRepository;
 import com.handpay.arch.stat.config.repository.RefConfigKpiRepository;
 import com.handpay.arch.stat.config.repository.RefRuleUserRepository;
+import com.handpay.arch.stat.config.repository.UserRepository;
 import com.handpay.arch.stat.config.repository.jdbc.JdbcRepository;
 import com.handpay.arch.stat.manager.StreamManager;
 import com.handpay.arch.stat.provider.ConfigCenterService;
@@ -56,6 +58,8 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
     private AlarmRuleRepository alarmRuleRepository;
     @Autowired
     private RefRuleUserRepository refRuleUserRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private JdbcRepository jdbcRepository;
@@ -155,28 +159,54 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
     public AlarmRuleInfo findOneKpi(String shortName, int configId) {
+        AlarmRuleInfo info = new AlarmRuleInfo();
+
+        // 1.指标:metricKpi
         MetricKpi kpi = new MetricKpi();
         MetricKpiEntity kpiEntity = kpiRepo.findOne(shortName);
         if (kpiEntity == null)
             kpiEntity = new MetricKpiEntity(shortName);
         BeanUtils.copyProperties(kpiEntity, kpi);
-
-        AlarmRuleEntity entity = alarmRuleRepository.findByKpiShortNameAndConfigId(shortName, configId);
-
-        AlarmRuleInfo info = new AlarmRuleInfo();
-        StatBean stat = streamManager.findStat(shortName);
-        info.setGroupKeyList(streamProvider.findGroupByName(shortName));
-        info.setValueKeyList(stat.getValueKeyList());
         info.setMetricKpi(kpi);
+
+        // 2.告警规则
+        AlarmRuleEntity entity = alarmRuleRepository.findByKpiShortNameAndConfigId(shortName, configId);
+        List<String> refUsers = Lists.newArrayList();
         if (entity != null) {
             BeanUtils.copyProperties(entity, info);
             if (entity.getThreshold() > Constants.KPI_PRECISION)
                 info.setThreshold(String.valueOf(entity.getThreshold()));
             if (entity.getThresholdAnother() > Constants.KPI_PRECISION)
                 info.setThresholdAnother(String.valueOf(entity.getThresholdAnother()));
+            refUsers = refRuleUserRepository.findByRuleId(entity.getId());
         } else {
             info.setConfigId(configId);
         }
+
+        // 3.告警人员(给谁发出告警)
+        List<UserEntity> users = userRepository.findAll();
+        for(UserEntity ue: users) {
+            Select userSelect = new Select(ue.getUserId(), ue.getChineseName(), ue.getDep());
+            if (refUsers.contains(ue.getUserId()))
+                userSelect.setSelected(true);
+            info.getUserList().add(userSelect);
+        }
+
+        // 4.初始化groupKey,valueKey列表
+        StatBean stat = streamManager.findStat(shortName);
+        for (String value : streamProvider.findGroupByName(shortName)) {
+            Select s = new Select(value);
+            if (entity != null && entity.getGroupKey() != null && entity.getGroupKey().indexOf(value) > -1)
+                s.setSelected(true);
+            info.getGroupKeyList().add(s);
+        }
+        for (Object v : stat.getValueKeyList()) {
+            Select s = new Select(String.valueOf(v));
+            if (entity != null && String.valueOf(v).equals(entity.getValueKey()))
+                s.setSelected(true);
+            info.getValueKeyList().add(s);
+        }
+
         return info;
     }
 
@@ -191,6 +221,12 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
             if(StringUtils.isNotEmpty(ruleInfo.getThresholdAnother()))
                 ruleEntity.setThresholdAnother(Float.parseFloat(ruleInfo.getThresholdAnother()));
             ruleEntity.setKpiShortName(ruleInfo.getMetricKpi().getShortName());
+            for (Select select: ruleInfo.getGroupKeyList()) {
+                String current = ruleEntity.getGroupKey() == null ? "" :ruleEntity.getGroupKey();
+                ruleEntity.setGroupKey(current + Constants.SEPARATOR_COMMA + select.getValue());
+            }
+            if (ruleEntity.getGroupKey() != null)
+                ruleEntity.setGroupKey(ruleEntity.getGroupKey().substring(1));
             alarmRuleRepository.save(ruleEntity);  //保存规则
 
             MetricKpiEntity kpiEntity = new MetricKpiEntity();
@@ -198,14 +234,33 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
             kpiRepo.save(kpiEntity);  //保存指标
 
             List<RefRuleUser> refList = Lists.newArrayList();
-            for (User user: ruleInfo.getUserList()) {
-                refList.add(new RefRuleUser(ruleEntity.getId(), user.getUserId()));
+            for (Select user: ruleInfo.getUserList()) {
+                refList.add(new RefRuleUser(ruleEntity.getId(), user.getValue()));
             }
+            refRuleUserRepository.deleteByRuleId(ruleEntity.getId());
             refRuleUserRepository.save(refList);  //保存规则和用户关联
         } catch (Exception ex) {
             ex.printStackTrace();
             return false;
         }
         return true;
+    }
+
+    @Override
+    public List<AlarmRuleInfo> findAllAlarm() {
+        List<AlarmRuleEntity> ruleEntities = alarmRuleRepository.findAll();
+        List<AlarmRuleInfo> ruleInfos = Lists.newArrayList();
+        if (ruleEntities == null) return ruleInfos;
+
+        for(AlarmRuleEntity entity: ruleEntities) {
+            AlarmRuleInfo ruleInfo = new AlarmRuleInfo();
+            BeanUtils.copyProperties(entity, ruleInfo);
+            if (entity.getThreshold() > Constants.KPI_PRECISION)
+                ruleInfo.setThreshold(String.valueOf(entity.getThreshold()));
+            if (entity.getThresholdAnother() > Constants.KPI_PRECISION)
+                ruleInfo.setThresholdAnother(String.valueOf(entity.getThresholdAnother()));
+            ruleInfos.add(ruleInfo);
+        }
+        return ruleInfos;
     }
 }

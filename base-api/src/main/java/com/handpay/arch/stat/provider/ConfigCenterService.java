@@ -35,4 +35,6 @@ public interface ConfigCenterService {
     AlarmRuleInfo findOneKpi(String shortName, int configId);
 
     boolean saveAlarmRule(AlarmRuleInfo ruleInfo);
+
+    List<AlarmRuleInfo> findAllAlarm();
 }

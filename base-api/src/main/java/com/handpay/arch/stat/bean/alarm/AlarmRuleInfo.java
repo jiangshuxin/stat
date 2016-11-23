@@ -1,5 +1,11 @@
 package com.handpay.arch.stat.bean.alarm;
 
+import com.google.common.collect.Lists;
+
+import com.handpay.arch.common.Constants;
+
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,21 +17,22 @@ public class AlarmRuleInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int id;
-    private String groupKey;  //选中的groupKey
-    private String valueKey;  //选中的valueKey
     private String threshold;
     private String rule;
     private String thresholdAnother;
     private String ruleAnother;
     private String noticeWay;
     private int retryTime;
+    private String valueKey;
+    private String groupKey;
+    private String kpiShortName;
 
-    private List<User> userList;
+    private List<Select> userList = Lists.newArrayList();
     private MetricKpi metricKpi;
     private int configId;
 
-    private List<String> groupKeyList;
-    private List<String> valueKeyList;
+    private List<Select> groupKeyList = Lists.newArrayList();
+    private List<Select> valueKeyList = Lists.newArrayList();
 
     public int getId() {
         return id;
@@ -33,22 +40,6 @@ public class AlarmRuleInfo implements Serializable {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getGroupKey() {
-        return groupKey;
-    }
-
-    public void setGroupKey(String groupKey) {
-        this.groupKey = groupKey;
-    }
-
-    public String getValueKey() {
-        return valueKey;
-    }
-
-    public void setValueKey(String valueKey) {
-        this.valueKey = valueKey;
     }
 
     public String getThreshold() {
@@ -99,14 +90,6 @@ public class AlarmRuleInfo implements Serializable {
         this.retryTime = retryTime;
     }
 
-    public List<User> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
-    }
-
     public MetricKpi getMetricKpi() {
         return metricKpi;
     }
@@ -123,19 +106,74 @@ public class AlarmRuleInfo implements Serializable {
         this.configId = configId;
     }
 
-    public List<String> getGroupKeyList() {
+    public List<Select> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<Select> userList) {
+        this.userList = userList;
+    }
+
+    public List<Select> getGroupKeyList() {
         return groupKeyList;
     }
 
-    public void setGroupKeyList(List<String> groupKeyList) {
+    public void setGroupKeyList(List<Select> groupKeyList) {
         this.groupKeyList = groupKeyList;
     }
 
-    public List<String> getValueKeyList() {
+    public List<Select> getValueKeyList() {
         return valueKeyList;
     }
 
-    public void setValueKeyList(List<String> valueKeyList) {
+    public void setValueKeyList(List<Select> valueKeyList) {
         this.valueKeyList = valueKeyList;
+    }
+
+    public String getValueKey() {
+        return valueKey;
+    }
+
+    public void setValueKey(String valueKey) {
+        this.valueKey = valueKey;
+    }
+
+    public String getGroupKey() {
+        return groupKey;
+    }
+
+    public void setGroupKey(String groupKey) {
+        this.groupKey = groupKey;
+    }
+
+    public String getKpiShortName() {
+        return kpiShortName;
+    }
+
+    public void setKpiShortName(String kpiShortName) {
+        this.kpiShortName = kpiShortName;
+    }
+
+
+    public String getRuleWithThreshold() {
+        if(StringUtils.isEmpty(rule))
+            return "";
+        return rule.concat(threshold);
+    }
+
+    public String getAnotherRuleWithThreshold() {
+        if(StringUtils.isEmpty(ruleAnother))
+            return "";
+        return ruleAnother.concat(thresholdAnother);
+    }
+
+    public String getReceiver() {
+        String receiver = "";
+        if(userList.isEmpty())
+            return receiver;
+
+        for (Select select: userList)
+            receiver = receiver + Constants.SEPARATOR_COMMA + select.getText();
+        return receiver.substring(1);
     }
 }

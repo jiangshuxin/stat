@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -78,8 +79,14 @@ public class ConfigCenterController {
     }
 
     @PostMapping("kpi/s")
-    public boolean saveKpi(AlarmRuleInfo ruleInfo) {
+    public boolean saveKpi(@RequestBody AlarmRuleInfo ruleInfo) {
         boolean isOk = configCenterService.saveAlarmRule(ruleInfo);
         return true;
+    }
+
+    @GetMapping("alarm/all")
+    public List<AlarmRuleInfo> findAllAlarm() {
+        List<AlarmRuleInfo> ruleInfos = configCenterService.findAllAlarm();
+        return ruleInfos;
     }
 }

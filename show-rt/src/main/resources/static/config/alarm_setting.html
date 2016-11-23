@@ -87,14 +87,14 @@
             <li class="am-active"><a href="#tab2">规则设置</a></li>
           </ul>
 
-          <div class="am-tabs-bd">
+          <div class="am-tabs-bd am-tabs-bd-ofv">
             <div class="am-tab-panel am-fade" id="tab1">
               <div class="am-g am-margin-top-sm">
                 <div class="am-u-sm-4 am-u-md-2 am-text-right">
                   指标简称
                 </div>
                 <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                  <input type="text" class="am-input-sm" name="metricKpi.shortName" id="shortName" readonly>
+                  <input type="text" class="am-input-sm" name="metricKpi[shortName]" id="shortName" readonly>
                 </div>
               </div>
 
@@ -103,7 +103,7 @@
                   展示名
                 </div>
                 <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                  <input type="text" class="am-input-sm" name="metricKpi.displayName" id="displayName">
+                  <input type="text" class="am-input-sm" name="metricKpi[displayName]" id="displayName">
                 </div>
               </div>
 
@@ -112,7 +112,7 @@
                   英文名
                 </div>
                 <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                  <input type="text" class="am-input-sm" name="metricKpi.englishName" id="englishName">
+                  <input type="text" class="am-input-sm" name="metricKpi[englishName]" id="englishName">
                 </div>
               </div>
 
@@ -121,7 +121,7 @@
                   描述信息
                 </div>
                 <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                  <textarea rows="4" name="metricKpi.description" id="description"></textarea>
+                  <textarea rows="4" name="metricKpi[description]" id="description"></textarea>
                 </div>
               </div>
 
@@ -130,7 +130,7 @@
                   单位
                 </div>
                 <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                  <input type="text" class="am-input-sm" name="metricKpi.unit" id="unit">
+                  <input type="text" class="am-input-sm" name="metricKpi[unit]" id="unit">
                 </div>
               </div>
             </div>
@@ -141,7 +141,7 @@
                   Group-Key
                 </div>
                 <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                  <select multiple data-am-selected="{btnSize: 'sm'}" id="groupKey" name="groupKey">
+                  <select multiple data-am-selected="{btnSize: 'sm'}" id="groupKey" name="groupKeyList[][value]">
                   </select>
                 </div>
               </div>
@@ -202,9 +202,15 @@
                   接收人
                 </div>
                 <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                  <input type="text" class="am-input-sm" name="userList[0].userId">
+                  <select multiple data-am-selected id="userSelect" name="userList[][value]" data-am-dropdown="{boundary: '#userSelect'}">
+                    <optgroup label="技研" id="jy">
+                    </optgroup>
+                    <optgroup label="运维" id="yw">
+                    </optgroup>
+                    <optgroup label="业务线" id="ywx">
+                    </optgroup>
+                  </select>
                 </div>
-                <input type="button" value="+" id="userIds">
               </div>
 
               <div class="am-g am-margin-top-sm">
@@ -239,6 +245,7 @@
 <script>
   $().ready(function () {
     $('.second').hide();
+    $('#receiverDiv').hide();
 
     $('#plusThreshold').click(function () {
       $('.second').show();
@@ -270,26 +277,37 @@
 
           //2. 填充规则初始化信息
           $.each(data.groupKeyList, function (i, v) {
-            $("#groupKey").append('<option value="' + v +'">' + v + '</option>');
+            var chosen = v.selected ? " selected" : "";
+            $("#groupKey").append('<option value="' + v.value + '"' + chosen + '>' + v.text + '</option>');
           });
           $.each(data.valueKeyList, function (i, v) {
-            $("#valueKey").append('<option value="' + v +'">' + v + '</option>');
+            var chosen = v.selected ? " selected" : "";
+            $("#valueKey").append('<option value="' + v.value + '"' + chosen + '>' + v.text + '</option>');
           });
 
           //3. 填充保存信息
-          $('#rule').selected('destroy');
-          $('#ruleAnother').selected('destroy');
-          $('#noticeWay').selected('destroy');
+          destroySelect();
           $("#kpi-form").fillForm( data );
-//          $('#rule').selected('destroy');  //amaze-ui-keng
-//          $('#rule').selected(data.rule);
-//          $('#ruleAnother').selected('destroy');
-//          $('#ruleAnother').selected(data.ruleAnother);
-//          $('#noticeWay').selected('destroy');
-//          $('#noticeWay').selected(data.noticeWay);
+
+          //4. 填充用户信息
+          $.each(data.userList, function (i, v) {
+            $.each($("#userSelect optgroup"), function (m, gv) {
+              if(v.group == gv.label) {
+                var chosen = v.selected ? " selected" : "";
+                $(this).append('<option value="' + v.value + '"' + chosen + '>' + v.text + '</option>');
+              }
+
+            });
+          });
         });
       }
     });
+
+    function destroySelect() {
+      $('#rule').selected('destroy');
+      $('#ruleAnother').selected('destroy');
+      $('#noticeWay').selected('destroy');
+    }
 
     function ruleReset() {
       $("#kpi-form")[0].reset();
@@ -304,12 +322,14 @@
     $("#submitSave").click(function () {
       var shortName = $("#kpi").val();
       console.log(JSON.stringify($('#kpi-form').serializeJSON()));
+      var json = JSON.stringify($('#kpi-form').serializeJSON());
       if(shortName != 'makeChoice') {
         $.ajax({
            cache: true,
            type: "POST",
            url: getContextPath() + "/kpi/s",
-           data: $('#kpi-form').serialize(),
+           data: json,
+           contentType:'application/json; charset=UTF-8',
            async: true,
            error: function (request) {
              alert("Connection error");
@@ -320,6 +340,7 @@
         });
       }
     });
+
   });
 </script>
 <!--[if lt IE 9]>

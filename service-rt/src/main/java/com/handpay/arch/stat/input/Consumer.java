@@ -8,6 +8,7 @@ import java.util.Properties;
 import com.alibaba.fastjson.JSON;
 import com.handpay.arch.stat.bean.CommonResult;
 import com.handpay.arch.stat.bean.StatBean;
+import com.handpay.arch.stat.config.service.AlarmWorker;
 import com.handpay.arch.stat.output.StreamWriter;
 
 import kafka.consumer.ConsumerConfig;
@@ -19,6 +20,8 @@ public class Consumer implements Runnable {
 	private final ConsumerConnector consumer;
 	private final StatBean statBean;
 	private StreamWriter writer;
+	private AlarmWorker alarmWorker;
+
 
 	public Consumer(StatBean statBean) {
 		consumer = kafka.consumer.Consumer.createJavaConsumerConnector(createConsumerConfig());
@@ -29,7 +32,7 @@ public class Consumer implements Runnable {
 		Properties props = new Properties();
 		props.put("zookeeper.connect", "10.48.193.210:2181");// ,10.48.193.211:2181
 		props.put("group.id", "myGroup-" + System.getProperty("env.type") + "-consumer-group");
-		props.put("zookeeper.session.timeout.ms", "4000");
+		props.put("zookeeper.session.timeout.ms", "15000");
 		props.put("zookeeper.sync.time.ms", "200");
 		props.put("auto.commit.interval.ms", "1000");
 
@@ -44,11 +47,17 @@ public class Consumer implements Runnable {
 		KafkaStream<byte[], byte[]> stream = consumerMap.get(statBean.getResultTopic()).get(0);
 		ConsumerIterator<byte[], byte[]> it = stream.iterator();
 		while (it.hasNext()) {
-			writer.write(statBean, (CommonResult) JSON.parse(new String(it.next().message())));
+			CommonResult result = (CommonResult) JSON.parse(new String(it.next().message()));
+			writer.write(statBean, result);
+			alarmWorker.checkKpi(statBean, result);
 		}
 	}
 
 	public void setWriter(StreamWriter writer) {
 		this.writer = writer;
+	}
+
+	public void setAlarmWorker(AlarmWorker alarmWorker) {
+		this.alarmWorker = alarmWorker;
 	}
 }
