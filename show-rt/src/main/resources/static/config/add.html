@@ -65,6 +65,7 @@
             <div class="am-tabs-bd">
                 <div class="am-tab-panel am-fade am-in am-active" id="tab1">
                     <form class="am-form" id="config-form" method="post">
+                        <input type="hidden" name="id" value="0">
                         <div class="am-g am-margin-top-sm">
                             <div class="am-u-sm-4 am-u-md-2 am-text-right">
                                 名称
@@ -75,9 +76,29 @@
                         </div>
 
                         <div class="am-g am-margin-top">
+                          <div class="am-u-sm-4 am-u-md-2 am-text-right">所属业务</div>
+                          <div class="am-u-sm-8 am-u-md-4 am-u-end">
+                            <select name="businessLine">
+                              <option value="TOP">TOP</option>
+                              <option value="IBS">IBS</option>
+                              <option value="ICS">ICS</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="am-g am-margin-top-sm">
+                          <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                            维护人
+                          </div>
+                          <div class="am-u-sm-8 am-u-md-4 am-u-end">
+                            <input type="text" class="am-input-sm" name="maintainMan">
+                          </div>
+                        </div>
+
+                        <div class="am-g am-margin-top">
                             <div class="am-u-sm-4 am-u-md-2 am-text-right">所属类别</div>
-                            <div class="am-u-sm-8 am-u-md-10">
-                                <select data-am-selected="{btnSize: 'sm'}" name="type">
+                            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+                                <select name="type">
                                     <option value="10001">服务器监控</option>
                                     <option value="10002">RPC信息</option>
                                     <option value="10003">JVM</option>
@@ -88,29 +109,10 @@
 
                         <div class="am-g am-margin-top-sm">
                             <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                对应表名
-                            </div>
-                            <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                                <input type="text" class="am-input-sm" name="tableName">
-                            </div>
-                        </div>
-
-                        <div class="am-g am-margin-top-sm">
-                            <div class="am-u-sm-4 am-u-md-2 am-text-right">
                                 描述信息
                             </div>
                             <div class="am-u-sm-8 am-u-md-4 am-u-end">
                                 <textarea rows="4" name="description"></textarea>
-                            </div>
-                        </div>
-
-                        <div class="am-g am-margin-top-sm">
-                            <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                                监控指标
-                            </div>
-                            <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                                <select multiple required data-am-selected="{dropUp: 1, btnWidth: '80%', btnSize: 'sm'}" id="kpi" name="kpiNames">
-                                </select>
                             </div>
                         </div>
                         <br>
@@ -156,20 +158,20 @@
     });
 
     $().ready(function () {
-        $.ajax({
-           cache: true,
-           type: "GET",
-           url: getContextPath() + "/kpi/all",
-           async: true,
-           error: function (request) {
-               alert("Connection error");
-           },
-           success: function (data) {
-               $.each(data, function(i, v){
-                   $("#kpi").append('<option value="' + v.shortName +'">' + v.shortName + '</option>');
-               });
-           }
-       });
+      if(window.location.search=="")
+        return;
+      var id = parseSearch()["id"];
+      $.getJSON( getContextPath()+"/config/g/"+id, function( data ) {
+        console.log(JSON.stringify(data));
+        //2. fill td data
+        var options = {
+          findbyname : true,
+          restrict : true
+        }
+        $("#config-form").fillForm( data );
+      });
+
+
     });
   });
 </script>

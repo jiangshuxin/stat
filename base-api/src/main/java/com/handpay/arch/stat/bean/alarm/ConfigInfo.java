@@ -12,9 +12,10 @@ public class ConfigInfo implements Serializable {
     private int id;
     private String name;
     protected int type;
-    private String tableName;
+    private String maintainMan;
+    private String maintainDate;
     private String description;
-    private String kpiNames;
+    private String businessLine;
 
     public int getId() {
         return id;
@@ -40,14 +41,6 @@ public class ConfigInfo implements Serializable {
         this.type = type;
     }
 
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -56,17 +49,32 @@ public class ConfigInfo implements Serializable {
         this.description = description;
     }
 
-    public String getKpiNames() {
-        return kpiNames;
+    public String getBusinessLine() {
+        return businessLine;
     }
 
-    public void setKpiNames(String kpiNames) {
-        this.kpiNames = kpiNames;
+    public void setBusinessLine(String businessLine) {
+        this.businessLine = businessLine;
     }
 
-    private String typeName;
     public String getTypeName() {
         return TYPE.findName(this.getType());
+    }
+
+    public String getMaintainMan() {
+        return maintainMan;
+    }
+
+    public void setMaintainMan(String maintainMan) {
+        this.maintainMan = maintainMan;
+    }
+
+    public String getMaintainDate() {
+        return maintainDate;
+    }
+
+    public void setMaintainDate(String maintainDate) {
+        this.maintainDate = maintainDate;
     }
 
     public enum TYPE {

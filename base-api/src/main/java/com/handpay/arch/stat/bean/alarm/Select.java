@@ -12,7 +12,6 @@ public class Select implements Serializable {
     private String value;
     private String text;
     private boolean isSelected;
-    private String group;  //分组下拉框
 
     public Select() {
 
@@ -30,13 +29,6 @@ public class Select implements Serializable {
         this.value = value;
         this.text = text;
     }
-
-    public Select(String value, String text, String group) {
-        this.value = value;
-        this.text = text;
-        this.group = group;
-    }
-
 
     public String getValue() {
         return value;
@@ -62,11 +54,4 @@ public class Select implements Serializable {
         isSelected = selected;
     }
 
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
-    }
 }

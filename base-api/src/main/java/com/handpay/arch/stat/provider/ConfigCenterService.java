@@ -1,12 +1,13 @@
 package com.handpay.arch.stat.provider;
 
 
+import java.util.List;
+
 import com.handpay.arch.stat.bean.alarm.AlarmRuleInfo;
 import com.handpay.arch.stat.bean.alarm.ConfigInfo;
-import com.handpay.arch.stat.bean.alarm.MetricKpi;
 import com.handpay.arch.stat.bean.alarm.RPCConfig;
-
-import java.util.List;
+import com.handpay.arch.stat.bean.alarm.RuleInitInfo;
+import com.handpay.arch.stat.bean.alarm.Select;
 
 /**
  * Created by fczheng on 2016/10/31.
@@ -19,6 +20,8 @@ public interface ConfigCenterService {
 
     void delete(int id);
 
+    ConfigInfo findOne(int id);
+
 
     /*****************特定配置*******************/
     Object saveSpecific(Object config);
@@ -30,11 +33,20 @@ public interface ConfigCenterService {
     List<?> findRPC(RPCConfig rpcConfig);
 
     /***************** 指标/告警 ****************/
-    List<MetricKpi> findKpi();
+    List<AlarmRuleInfo> findAllAlarmRule();
 
-    AlarmRuleInfo findOneKpi(String shortName, int configId);
+    List<AlarmRuleInfo> findRuleByConfigId(int configId);
+
+    List<String> findKpiNames();
+
+    RuleInitInfo findKpiByName(String kpiName);
 
     boolean saveAlarmRule(AlarmRuleInfo ruleInfo);
 
-    List<AlarmRuleInfo> findAllAlarm();
+    void deleteRule(int id);
+
+    AlarmRuleInfo findOneRule(int id);
+
+    /***************** 用户 ****************/
+    List<Select> findUserSelect();
 }

@@ -10,8 +10,8 @@ import javax.persistence.Id;
 /**
  * Created by fczheng on 2016/11/18.
  */
-@Entity(name = "alarm_info")
-public class AlarmEntity {
+@Entity(name = "alarm_record")
+public class AlarmRecordEntity {
     @Id
     @GeneratedValue
     private int id;

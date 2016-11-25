@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface AlarmRuleRepository extends JpaRepository<AlarmRuleEntity, Integer> {
 
-    AlarmRuleEntity findByKpiShortNameAndConfigId(String kpiShortName, int configId);
+    List<AlarmRuleEntity> findByKpiNameAndValueKeyIn(String kpiName, Collection<String> valueKeys);
 
-    List<AlarmRuleEntity> findByKpiShortNameAndValueKeyIn(String kpiShortName, Collection<String> valueKeys);
+    List<AlarmRuleEntity> findByConfigId(int configId);
 }

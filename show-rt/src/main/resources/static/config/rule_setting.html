@@ -13,6 +13,7 @@
   <link rel="apple-touch-icon-precomposed" href="../amaze/assets/i/app-icon72x72@2x.png">
   <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
   <link rel="stylesheet" href="../amaze/assets/css/amazeui.min.css"/>
+  <link rel="stylesheet" href="../amaze/assets/css/select2.min.css"/>
   <link rel="stylesheet" href="../amaze/assets/css/admin.css">
 </head>
 <body>
@@ -64,93 +65,60 @@
         </div>
       </div>
 
-      <div class="am-tabs am-margin" data-am-tabs>
-        <div class="am-g am-margin-top-sm">
-          <div class="am-u-sm-4 am-u-md-2 am-text-right">
-            监控指标
-          </div>
-          <div class="am-u-sm-8 am-u-md-4 am-u-end">
-            <select data-am-selected="{btnSize: 'sm'}" id="kpi" name="sname">
-              <option value="makeChoice"> 请选择 </option>
-            </select>
-          </div>
-        </div>
-      </div>
+      <hr>
 
       <form class="am-form" id="kpi-form" method="post">
-        <input type="hidden" name="id">
-        <input type="hidden" name="configId" id="configId">
+        <input type="hidden" name="id" value="0">
+        <input type="hidden" name="configId" id="configId" value="0">
 
         <div class="am-tabs am-margin" data-am-tabs>
           <ul class="am-tabs-nav am-nav am-nav-tabs">
-            <li><a href="#tab1">基本信息</a></li>
             <li class="am-active"><a href="#tab2">规则设置</a></li>
           </ul>
 
           <div class="am-tabs-bd am-tabs-bd-ofv">
-            <div class="am-tab-panel am-fade" id="tab1">
-              <div class="am-g am-margin-top-sm">
-                <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                  指标简称
-                </div>
-                <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                  <input type="text" class="am-input-sm" name="metricKpi[shortName]" id="shortName" readonly>
-                </div>
-              </div>
-
-              <div class="am-g am-margin-top-sm">
-                <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                  展示名
-                </div>
-                <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                  <input type="text" class="am-input-sm" name="metricKpi[displayName]" id="displayName">
-                </div>
-              </div>
-
-              <div class="am-g am-margin-top-sm">
-                <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                  英文名
-                </div>
-                <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                  <input type="text" class="am-input-sm" name="metricKpi[englishName]" id="englishName">
-                </div>
-              </div>
-
-              <div class="am-g am-margin-top-sm">
-                <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                  描述信息
-                </div>
-                <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                  <textarea rows="4" name="metricKpi[description]" id="description"></textarea>
-                </div>
-              </div>
-
-              <div class="am-g am-margin-top-sm">
-                <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                  单位
-                </div>
-                <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                  <input type="text" class="am-input-sm" name="metricKpi[unit]" id="unit">
-                </div>
-              </div>
-            </div>
-
             <div class="am-tab-panel am-fade am-in am-active" id="tab2">
+
               <div class="am-g am-margin-top-sm">
                 <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                  Group-Key
+                  指标名称
+                </div>
+                <div class="am-u-sm-4 am-u-md-2 am-u-end">
+                  <select id="kpi" name="kpiName">
+                    <option></option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="am-g am-margin-top-sm">
+                <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                  监控对象
                 </div>
                 <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                  <select multiple data-am-selected="{btnSize: 'sm'}" id="groupKey" name="groupKeyList[][value]">
+                  <select multiple="multiple" id="groupKey" name="groupKeyList[][value]">
+                    <option></option>
                   </select>
                 </div>
               </div>
               <div class="am-g am-margin-top-sm">
                 <div class="am-u-sm-4 am-u-md-2 am-text-right">
-                  Value-Key
+                  监控项
                 </div>
-                <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                  <select data-am-selected="{btnSize: 'sm'}" id="valueKey" name="valueKey">
+                <div class="am-u-sm-4 am-u-md-2 am-u-end">
+                  <select id="valueKey" name="valueKey">
+                  </select>
+                </div>
+              </div>
+
+              <div class="am-g am-margin-top-sm">
+                <div class="am-u-sm-4 am-u-md-2 am-text-right">
+                  预警类别
+                </div>
+                <div class="am-u-sm-4 am-u-md-2 am-u-end">
+                  <select id="monitorType" name="monitorType">
+                    <option value="0">阈值</option>
+                    <option value="1">正则</option>
+                    <option value="2">模糊匹配</option>
                   </select>
                 </div>
               </div>
@@ -158,8 +126,7 @@
               <div class="am-g am-margin-top-sm">
                 <div class="am-u-sm-4 am-u-md-2 am-text-right">预警阈值</div>
                 <div class="am-u-sm-4 am-u-md-2">
-                  <select data-am-selected="{btnSize: 'sm', btnWidth: '60%'}" name="rule" id="rule">
-                    <option value=""> 请选择 </option>
+                  <select name="rule" id="rule">
                     <option value=">">  &gt; </option>
                     <option value="<">  &lt; </option>
                     <option value="=">  = </option>
@@ -171,8 +138,8 @@
                   <input type="number" class="am-input-sm" min="0" name="threshold">
                 </div>
                 <div class="am-u-sm-4 am-u-md-2 second">
-                  <select data-am-selected="{btnSize: 'sm', btnWidth: '60%'}" name="ruleAnother">
-                    <option value=""> 请选择 </option>
+                  <select name="ruleAnother">
+                    <option></option>
                     <option value=">">  &gt; </option>
                     <option value="<">  &lt; </option>
                     <option value="=">  = </option>
@@ -189,8 +156,8 @@
 
               <div class="am-g am-margin-top-sm">
                 <div class="am-u-sm-4 am-u-md-2 am-text-right">通知方式</div>
-                <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                  <select data-am-selected="{btnSize: 'sm'}" name="noticeWay" id="noticeWay">
+                <div class="am-u-sm-4 am-u-md-2 am-u-end">
+                  <select name="noticeWay" id="noticeWay">
                     <option value="Email">Email</option>
                     <option value="SMS">SMS</option>
                   </select>
@@ -201,8 +168,9 @@
                 <div class="am-u-sm-4 am-u-md-2 am-text-right">
                   接收人
                 </div>
-                <div class="am-u-sm-8 am-u-md-4 am-u-end">
-                  <select multiple data-am-selected id="userSelect" name="userList[][value]" data-am-dropdown="{boundary: '#userSelect'}">
+                <div class="am-u-sm-4 am-u-md-2 am-u-end">
+                  <select multiple id="userSelect" name="userList[][value]">
+                    <option></option>
                     <optgroup label="技研" id="jy">
                     </optgroup>
                     <optgroup label="运维" id="yw">
@@ -217,7 +185,7 @@
                 <div class="am-u-sm-4 am-u-md-2 am-text-right">
                   重试次数
                 </div>
-                <div class="am-u-sm-8 am-u-md-4 am-u-end">
+                <div class="am-u-sm-4 am-u-md-2 am-u-end">
                   <input type="number" class="am-input-sm" name="retryTime">
                 </div>
               </div>
@@ -240,12 +208,12 @@
 <script src="../amaze/assets/js/jquery.min.js"></script>
 <script src="../amaze/assets/js/jquery.serializejson.js"></script>
 <script src="../amaze/assets/js/amazeui.min.js"></script>
+<script src="../amaze/assets/js/select2.min.js"></script>
 <script src="../amaze/assets/js/app.js"></script>
 <script src="../amaze/assets/js/plugins.js"></script>
 <script>
   $().ready(function () {
     $('.second').hide();
-    $('#receiverDiv').hide();
 
     $('#plusThreshold').click(function () {
       $('.second').show();
@@ -257,56 +225,85 @@
       $("#plusThreshold").show();
     });
 
-    $("#configId").val(parseSearch()["id"]);
-
-    var shortNames = parseSearch()["kpi"];
-    var nameArr = shortNames.split(",");
-    $.each(nameArr, function (i, v) {
-      $("#kpi").append('<option value="' + v +'">' + v + '</option>');
+    $('select').select2({
+      placeholder: '请选择',
+      theme: "classic"
     });
 
-    $("#kpi").change(function () {
-      var shortName = $(this).val();
-      if(shortName != 'makeChoice') {
-        $.getJSON(getContextPath() + "/kpi/" + $("#configId").val() + "/" + shortName, function (data) {
-          ruleReset();
+    if (window.location.search.indexOf("?id") == -1) {
+      initAdd();
+    } else {
+      initEdit(parseSearch()["id"]);
+    }
+
+    /*
+    * 初始化新增
+    * */
+    function initAdd() {
+      $("#configId").val(parseSearch()["configId"]);
+
+      $.getJSON(getContextPath() + "/rule/init/", function (data) {
+        $.each(data.kpiNames, function (i, v) {
+          $("#kpi").append('<option value="' + v + '">' + v + '</option>');
+        });
+        fillUserInfo(data);
+      });
+    }
+
+    /*
+    * 初始化编辑
+    * */
+    function initEdit(id) {
+      $.getJSON(getContextPath() + "/rule/g/" + id, function (data) {
+        ruleReset();
+        console.log(data);
+
+        $("#kpi-form").fillForm( data );
+        fillMonitor(data);
+        fillUserInfo(data);
+
+        $("#kpi").append('<option value="' + data.kpiName + '" selected>' + data.kpiName + '</option>');
+        $("#kpi").attr("disabled", true);
+
+        $('select').trigger('change');
+      });
+    }
+
+    $("#kpi").on('select2:select', function () {
+      var kpiName = $(this).val();
+      if(kpiName != '') {
+        $.getJSON(getContextPath() + "/kpi/g/" + kpiName, function (data) {
           console.log(data);
-          //1. 填充基本信息
-          var options = { findbyname : false, restrict : true };
-          $("#kpi-form").fillForm( data.metricKpi, options );
-
-          //2. 填充规则初始化信息
-          $.each(data.groupKeyList, function (i, v) {
-            var chosen = v.selected ? " selected" : "";
-            $("#groupKey").append('<option value="' + v.value + '"' + chosen + '>' + v.text + '</option>');
-          });
-          $.each(data.valueKeyList, function (i, v) {
-            var chosen = v.selected ? " selected" : "";
-            $("#valueKey").append('<option value="' + v.value + '"' + chosen + '>' + v.text + '</option>');
-          });
-
-          //3. 填充保存信息
-          destroySelect();
-          $("#kpi-form").fillForm( data );
-
-          //4. 填充用户信息
-          $.each(data.userList, function (i, v) {
-            $.each($("#userSelect optgroup"), function (m, gv) {
-              if(v.group == gv.label) {
-                var chosen = v.selected ? " selected" : "";
-                $(this).append('<option value="' + v.value + '"' + chosen + '>' + v.text + '</option>');
-              }
-
-            });
-          });
+          ruleReset();
+          $("#kpi").val(kpiName);
+          fillMonitor(data);
         });
       }
     });
 
-    function destroySelect() {
-      $('#rule').selected('destroy');
-      $('#ruleAnother').selected('destroy');
-      $('#noticeWay').selected('destroy');
+    function fillMonitor(data) {
+      //1. 填充监控对象
+      $.each(data.groupKeyList, function (i, v) {
+        var chosen = v.selected ? " selected" : "";
+        $("#groupKey").append('<option value="' + v.value + '"' + chosen + '>' + v.text + '</option>');
+      });
+
+      //2. 填充监控项信息
+      $.each(data.valueKeyList, function (i, v) {
+        var chosen = v.selected ? " selected" : "";
+        $("#valueKey").append('<option value="' + v.value + '"' + chosen + '>' + v.text + '</option>');
+      });
+    }
+    
+    function fillUserInfo(data) {
+      $.each(data.userList, function (i, v) {
+        $.each($("#userSelect optgroup"), function (m, gv) {
+          if(v.group == gv.label) {
+            var chosen = v.selected ? " selected" : "";
+            $(this).append('<option value="' + v.value + '"' + chosen + '>' + v.text + '</option>');
+          }
+        });
+      });
     }
 
     function ruleReset() {
@@ -316,18 +313,19 @@
     }
 
     $("#quitSave").click(function () {
-      window.location.href = getContextPath() + "/config/list.html";
+      window.location.href = getContextPath() + "/config/rule_list.html";
     });
 
     $("#submitSave").click(function () {
-      var shortName = $("#kpi").val();
+      $("#kpi").removeAttr("disabled");
+      var kpiName = $("#kpi").val();
       console.log(JSON.stringify($('#kpi-form').serializeJSON()));
       var json = JSON.stringify($('#kpi-form').serializeJSON());
-      if(shortName != 'makeChoice') {
+      if(kpiName != '') {
         $.ajax({
            cache: true,
            type: "POST",
-           url: getContextPath() + "/kpi/s",
+           url: getContextPath() + "/rule/s",
            data: json,
            contentType:'application/json; charset=UTF-8',
            async: true,
@@ -335,7 +333,10 @@
              alert("Connection error");
            },
            success: function (data) {
-             window.location.href = getContextPath() + "/config/list.html";
+             var configId = $("#configId").val();
+             if (configId != "0") {
+               window.location.href = getContextPath() + "/config/rule_list.html?configId=" + configId;
+             } else window.location.href = getContextPath() + "/config/rule_list.html";
            }
         });
       }

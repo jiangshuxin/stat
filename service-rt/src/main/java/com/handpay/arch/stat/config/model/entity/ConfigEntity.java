@@ -1,12 +1,12 @@
 package com.handpay.arch.stat.config.model.entity;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Transient;
 
 /**
  * Created by fczheng on 2016/10/31.
@@ -22,11 +22,13 @@ public class ConfigEntity implements Serializable {
     private String name;
     @Column(nullable = false)
     protected int type;
-    @Column(nullable = false, name="table_name")
-    private String tableName;
+    @Column(nullable = false, name="maintain_man")
+    private String maintainMan;
+    @Column(nullable = false, name="maintain_date")
+    private Date maintainDate;
     private String description;
-    @Transient
-    private String kpiNames;
+    @Column(nullable = false, name="business_line")
+    private String businessLine;
 
     public int getId() {
         return id;
@@ -40,8 +42,8 @@ public class ConfigEntity implements Serializable {
         return type;
     }
 
-    public String getTableName() {
-        return tableName;
+    public String getMaintainMan() {
+        return maintainMan;
     }
 
     public String getDescription() {
@@ -60,19 +62,27 @@ public class ConfigEntity implements Serializable {
         this.type = type;
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public void setMaintainMan(String maintainMan) {
+        this.maintainMan = maintainMan;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getKpiNames() {
-        return kpiNames;
+    public String getBusinessLine() {
+        return businessLine;
     }
 
-    public void setKpiNames(String kpiNames) {
-        this.kpiNames = kpiNames;
+    public void setBusinessLine(String businessLine) {
+        this.businessLine = businessLine;
+    }
+
+    public Date getMaintainDate() {
+        return maintainDate;
+    }
+
+    public void setMaintainDate(Date maintainDate) {
+        this.maintainDate = maintainDate;
     }
 }

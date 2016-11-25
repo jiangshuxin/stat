@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import com.handpay.arch.stat.bean.CommonResult;
 import com.handpay.arch.stat.bean.StatBean;
 import com.handpay.arch.stat.config.model.MetricChecker;
-import com.handpay.arch.stat.config.model.entity.AlarmEntity;
+import com.handpay.arch.stat.config.model.entity.AlarmRecordEntity;
 import com.handpay.arch.stat.config.model.entity.AlarmRuleEntity;
-import com.handpay.arch.stat.config.repository.AlarmRepository;
+import com.handpay.arch.stat.config.repository.AlarmRecordRepository;
 import com.handpay.arch.stat.config.repository.AlarmRuleRepository;
 import com.handpay.arch.stat.config.service.AlarmWorker;
 
@@ -22,7 +22,7 @@ public class AlarmWorkerImpl implements AlarmWorker {
 	@Autowired
 	private AlarmRuleRepository ruleRepository;
 	@Autowired
-	private AlarmRepository alarmRepository;
+	private AlarmRecordRepository alarmRepository;
 
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -35,13 +35,13 @@ public class AlarmWorkerImpl implements AlarmWorker {
 		checker.refine();
 
 		// 2.取出监控数据相关规则
-		List<AlarmRuleEntity> ruleList = ruleRepository.findByKpiShortNameAndValueKeyIn(statBean.getName(), checker.getValueMap().keySet());
+		List<AlarmRuleEntity> ruleList = ruleRepository.findByKpiNameAndValueKeyIn(statBean.getName(), checker.getValueMap().keySet());
 
 		// 3.根据规则判断是否预警
 		checker.check(ruleList);
-		List<AlarmEntity> alarms = checker.getAlarms();
+		List<AlarmRecordEntity> records = checker.getRecords();
 		// 4.将预警数据信息写入数据库
-		alarmRepository.save(alarms);
+		alarmRepository.save(records);
 	}
 
 }

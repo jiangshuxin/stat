@@ -1,6 +1,7 @@
 package com.handpay.arch.stat.config.model.entity;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,9 +32,13 @@ public class AlarmRuleEntity implements Serializable {
     private double thresholdAnother;
     @Column(name = "rule_another")
     private String ruleAnother;
+    @Column(name = "kpi_name")
+    private String kpiName;
+    @Column(name = "monitor_type")
+    private int monitorType;
+    @Column(name = "maintain_time")
+    private Timestamp maintainTime;
 
-    @Column(name = "kpi_short_name")
-    private String kpiShortName;
     @Column(name = "config_id")
     private int configId;
 
@@ -109,12 +114,28 @@ public class AlarmRuleEntity implements Serializable {
         this.ruleAnother = ruleAnother;
     }
 
-    public String getKpiShortName() {
-        return kpiShortName;
+    public String getKpiName() {
+        return kpiName;
     }
 
-    public void setKpiShortName(String kpiShortName) {
-        this.kpiShortName = kpiShortName;
+    public void setKpiName(String kpiName) {
+        this.kpiName = kpiName;
+    }
+
+    public int getMonitorType() {
+        return monitorType;
+    }
+
+    public void setMonitorType(int monitorType) {
+        this.monitorType = monitorType;
+    }
+
+    public Timestamp getMaintainTime() {
+        return maintainTime;
+    }
+
+    public void setMaintainTime(Timestamp maintainTime) {
+        this.maintainTime = maintainTime;
     }
 
     public int getConfigId() {

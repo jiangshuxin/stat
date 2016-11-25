@@ -1,10 +1,7 @@
 package com.handpay.arch.stat.controller;
 
 
-import com.handpay.arch.stat.bean.alarm.AlarmRuleInfo;
-import com.handpay.arch.stat.bean.alarm.ConfigInfo;
-import com.handpay.arch.stat.bean.alarm.RPCConfig;
-import com.handpay.arch.stat.provider.ConfigCenterService;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.handpay.arch.stat.bean.alarm.AlarmRuleInfo;
+import com.handpay.arch.stat.bean.alarm.ConfigInfo;
+import com.handpay.arch.stat.bean.alarm.RPCConfig;
+import com.handpay.arch.stat.bean.alarm.RuleInitInfo;
+import com.handpay.arch.stat.provider.ConfigCenterService;
 
 /**
  * Created by fczheng on 2016/10/31.
@@ -28,6 +29,12 @@ public class ConfigCenterController {
     public List<?> findAll() {
         List<?> all = configCenterService.findAll();
         return all;
+    }
+
+    @GetMapping("/config/g/{id}")
+    public ConfigInfo findOne(@PathVariable(name = "id") int id) {
+        ConfigInfo info = configCenterService.findOne(id);
+        return info;
     }
 
 
@@ -68,25 +75,46 @@ public class ConfigCenterController {
 
 
     /******************************** 指标/告警 ************************************/
-    @GetMapping("/kpi/all")
-    public List<?> findKpi() {
-       return configCenterService.findKpi();
+    @GetMapping("/rule/all")
+    public List<AlarmRuleInfo> findAllAlarmRule() {
+        List<AlarmRuleInfo> ruleInfos = configCenterService.findAllAlarmRule();
+        return ruleInfos;
     }
 
-    @GetMapping("/kpi/{configId}/{shortName}")
-    public AlarmRuleInfo findOneKpi(@PathVariable(name = "configId") int configId, @PathVariable(name = "shortName") String shortName) {
-        return configCenterService.findOneKpi(shortName, configId);
+    @GetMapping("config/{configId}/rule")
+    public List<AlarmRuleInfo> findRuleByConfig(@PathVariable(name = "configId") int configId) {
+        List<AlarmRuleInfo> ruleInfos = configCenterService.findRuleByConfigId(configId);
+        return ruleInfos;
     }
 
-    @PostMapping("kpi/s")
+    @GetMapping("/rule/init")
+    public RuleInitInfo initRule() {
+        RuleInitInfo init = new RuleInitInfo();
+        init.setKpiNames(configCenterService.findKpiNames());
+        init.setUserList(configCenterService.findUserSelect());
+        return init;
+    }
+
+    @GetMapping("/kpi/g/{kpiName}")
+    public RuleInitInfo findKpiByName(@PathVariable(name = "kpiName") String kpiName) {
+        RuleInitInfo init = configCenterService.findKpiByName(kpiName);
+        return init;
+    }
+
+    @GetMapping("/rule/g/{id}")
+    public AlarmRuleInfo findOneKpi(@PathVariable(name = "id") int id) {
+        return configCenterService.findOneRule(id);
+    }
+
+    @PostMapping("rule/s")
     public boolean saveKpi(@RequestBody AlarmRuleInfo ruleInfo) {
         boolean isOk = configCenterService.saveAlarmRule(ruleInfo);
-        return true;
+        return isOk;
     }
 
-    @GetMapping("alarm/all")
-    public List<AlarmRuleInfo> findAllAlarm() {
-        List<AlarmRuleInfo> ruleInfos = configCenterService.findAllAlarm();
-        return ruleInfos;
+    @PostMapping("rule/d")
+    public boolean deleteRule(int id){
+        configCenterService.deleteRule(id);
+        return true;
     }
 }

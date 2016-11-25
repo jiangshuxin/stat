@@ -22,7 +22,7 @@ import com.handpay.arch.common.Constants;
 import com.handpay.arch.stat.anno.GroupKey;
 import com.handpay.arch.stat.anno.ValueKey;
 import com.handpay.arch.stat.bean.CommonResult;
-import com.handpay.arch.stat.config.model.entity.AlarmEntity;
+import com.handpay.arch.stat.config.model.entity.AlarmRecordEntity;
 import com.handpay.arch.stat.config.model.entity.AlarmRuleEntity;
 
 /**
@@ -41,14 +41,14 @@ public class MetricChecker {
 	}
 
 	private CheckData checkData;
-	List<AlarmEntity> alarms = Lists.newArrayList();
+	List<AlarmRecordEntity> records = Lists.newArrayList();
 
 	public Map<String, String> getValueMap() {
 		return checkData.getValueMap();
 	}
 
-	public List<AlarmEntity> getAlarms() {
-		return alarms;
+	public List<AlarmRecordEntity> getRecords() {
+		return records;
 	}
 
 	public void refine() {
@@ -116,14 +116,14 @@ public class MetricChecker {
 		try {
 			boolean isWarning = (boolean) jsEngine.eval(realValue + rule.getRule() + rule.getThreshold());
 			if (isWarning)
-				alarms.add(generateAlarmInfo(rule, realValue));
+				records.add(generateAlarmInfo(rule, realValue));
 		} catch (ScriptException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private AlarmEntity generateAlarmInfo(AlarmRuleEntity rule, String realValue) {
-		AlarmEntity entity = new AlarmEntity();
+	private AlarmRecordEntity generateAlarmInfo(AlarmRuleEntity rule, String realValue) {
+		AlarmRecordEntity entity = new AlarmRecordEntity();
 		entity.setRuleId(rule.getId());
 		entity.setAlarmTime(new Timestamp(System.currentTimeMillis()));
 		String content = String.format(ALARM_TEMPLATE, rule.getValueKey(), realValue, rule.getId(), rule.getRule() + rule.getThreshold());

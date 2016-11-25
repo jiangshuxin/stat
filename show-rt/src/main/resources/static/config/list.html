@@ -58,7 +58,7 @@
       <hr>
 
       <div class="am-g">
-        <div class="am-u-sm-12 am-u-md-6">
+        <div class="am-u-sm-12 am-u-md-5">
           <div class="am-btn-toolbar">
             <div class="am-btn-group am-btn-group-xs">
               <button type="button" class="am-btn am-btn-default" id="save"><span class="am-icon-plus"></span> 新增</button>
@@ -69,25 +69,29 @@
             </div>
           </div>
         </div>
-        <div class="am-u-sm-12 am-u-md-3">
-          <div class="am-form-group">
-            <select data-am-selected="{btnSize: 'sm'}">
-              <option value="option1">所有类别</option>
-              <option value="option3">笔记本电脑</option>
-              <option value="option3">平板电脑</option>
-              <option value="option3">智能手机</option>
-              <option value="option3">超极本</option>
-            </select>
+        <form id="search-form">
+          <div class="am-u-sm-5 am-u-md-3">
+            <div class="am-form-group">
+              <select data-am-selected="{btnSize: 'sm'}" name="businessLine">
+                <option value="">所属业务线</option>
+                <option value="TOP">TOP</option>
+                <option value="IBS">IBS</option>
+                <option value="ICS">ICS</option>
+              </select>
+            </div>
           </div>
-        </div>
-        <div class="am-u-sm-12 am-u-md-3">
-          <div class="am-input-group am-input-group-sm">
-            <input type="text" class="am-form-field">
-          <span class="am-input-group-btn">
-            <button class="am-btn am-btn-default" type="button">搜索</button>
-          </span>
+          <div class="am-u-sm-1 am-u-md-1">
+            维护人
           </div>
-        </div>
+          <div class="am-u-sm-6 am-u-md-3">
+            <div class="am-input-group am-input-group-sm">
+              <input type="text" class="am-form-field" name="appName">
+              <span class="am-input-group-btn">
+                    <button class="search am-btn am-btn-default" type="button">搜索</button>
+                  </span>
+            </div>
+          </div>
+        </form>
       </div>
 
       <div class="am-g">
@@ -97,28 +101,30 @@
                 <th><input type="checkbox"/></th>
                 <th>ID</th>
                 <th>名称</th>
+                <th>所属业务</th>
+                <th>维护人</th>
                 <th>类别</th>
-                <th>对应表名</th>
                 <th>描述信息</th>
-                <th>监控指标</th>
+                <th>维护日期</th>
                 <th>操作</th>
               </tr>
               <tr class="tr_config0">
                 <td class="cb_config"><input type="checkbox" /></td>
                 <td class="id"></td>
                 <td><a href="#" class="name redirect"></a></td>
+                <td class="businessLine"></td>
+                <td class="maintainMan"></td>
                 <td class="typeName"></td>
-                <td class="tableName"></td>
                 <td class="description"></td>
-                <td class="kpiNames"></td>
+                <td class="maintainDate"></td>
                 <td class="operate">
                   <div class="am-btn-toolbar">
                     <div class="am-btn-group am-btn-group-xs">
-                      <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-pencil-square-o"></span> 编辑</button>
+                      <button class="editOne am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-pencil-square-o"></span> 编辑</button>
                       <button class="deleteOne am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-trash-o"></span> 删除</button>
                     </div>
                     <div class="am-btn-group am-btn-group-xs">
-                      <button class="toAlarm am-btn am-btn-default am-btn-xs am-text-warning"><span class="am-icon-clock-o"></span> 告警设置</button>
+                      <button class="toRule am-btn am-btn-default am-btn-xs am-text-warning"><span class="am-icon-clock-o"></span> 告警设置</button>
                     </div>
                   </div>
                 </td>
@@ -225,19 +231,24 @@
           });
       });
 
+      //编辑
+      $("#config-table").on("click", ".editOne", function () {
+        var id = $(this).closest("tr").children().eq(1).html();
+        window.location.href = getContextPath()+"/config/add.html?id="+id;
+      });
+
       //定向
       $("#config-table").on("click", ".redirect", function () {
         window.location.href =  getContextPath() + "/config/rpc_list.html";
       });
       //告警设置
-      $("#config-table").on("click", ".toAlarm", function () {
+      $("#config-table").on("click", ".toRule", function () {
         var id = $(this).closest("tr").children().eq(1).html();
-        var kpi = $(this).closest("tr").children().eq(6).html();
-        window.location.href =  getContextPath() + "/config/alarm_setting.html?id="+id+"&kpi="+kpi;
+        window.location.href =  getContextPath() + "/config/rule_list.html?configId="+id;
       });
 
       $("#alarmList").click(function () {
-        window.location.href =  getContextPath() + "/config/alarm_list.html";
+        window.location.href =  getContextPath() + "/config/rule_list.html";
       });
   });
 </script>

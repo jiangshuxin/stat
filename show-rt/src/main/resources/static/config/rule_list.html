@@ -52,7 +52,10 @@
   <div class="admin-content">
     <div class="admin-content-body">
       <div class="am-cf am-padding am-padding-bottom-0">
-        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg"><a href="list.html">配置中心</a></strong> / <small>RPC配置</small></div>
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">
+          配置中心</strong> /
+          <small>告警列表</small>
+        </div>
       </div>
 
       <hr>
@@ -67,22 +70,15 @@
           </div>
         </div>
         <form id="search-form">
+            <input type="hidden" name="configId" value="0" id="configId">
             <div class="am-u-sm-12 am-u-md-3">
-              <div class="am-form-group">
-                <select data-am-selected="{btnSize: 'sm'}" name="businessLine">
-                  <option value="">所属业务线</option>
-                  <option value="TOP">TOP</option>
-                  <option value="IBS">IBS</option>
-                  <option value="ICS">ICS</option>
-                </select>
-              </div>
             </div>
             <div class="am-u-sm-12 am-u-md-1">
-                应用名
+                指标名称
             </div>
             <div class="am-u-sm-12 am-u-md-3">
               <div class="am-input-group am-input-group-sm">
-                  <input type="text" class="am-form-field" name="appName">
+                  <input type="text" class="am-form-field" name="kpiName">
                   <span class="am-input-group-btn">
                     <button class="search am-btn am-btn-default" type="button">搜索</button>
                   </span>
@@ -93,35 +89,37 @@
 
       <div class="am-g">
         <div class="am-u-sm-12">
-            <table class="am-table am-table-striped am-table-hover table-main" id="config-table">
+            <table class="am-table am-table-striped am-table-hover table-main" id="rule-table">
               <tr>
                 <th><input type="checkbox"/></th>
                 <th>ID</th>
-                <th>监控指标</th>
-                <th>GroupKey</th>
-                <th>ValueKey</th>
-                <th>监控规则</th>
-                <th>监控规则2</th>
-                <th>通知方式</th>
+                <th>指标名称</th>
+                <th>监控对象</th>
+                <th>监控项</th>
+                <th>预警类别</th>
+                <th>预警规则</th>
                 <th>接收人</th>
+                <th>通知方式</th>
                 <th>重试次数</th>
+                <th>维护时间</th>
                 <th>操作</th>
               </tr>
               <tr class="tr_config0">
                 <td class="cb_config"><input type="checkbox" /></td>
                 <td class="id"></td>
-                <td class="kpiShortName"></td>
+                <td class="kpiName"></td>
                 <td class="groupKey"></td>
                 <td class="valueKey"></td>
+                <td class="monitorTypeName"></td>
                 <td class="ruleWithThreshold"></td>
-                <td class="anotherRuleWithThreshold"></td>
-                <td class="noticeWay"></td>
                 <td class="receiver"></td>
+                <td class="noticeWay"></td>
                 <td class="retryTime"></td>
+                <td class="maintainTime"></td>
                 <td class="operate">
                   <div class="am-btn-toolbar">
                     <div class="am-btn-group am-btn-group-xs">
-                      <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-pencil-square-o"></span> 编辑</button>
+                      <button class="editOne am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-pencil-square-o"></span> 编辑</button>
                       <button class="deleteOne am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-trash-o"></span> 删除</button>
                     </div>
                   </div>
@@ -177,36 +175,43 @@
   $(function(){
 
       //初始化表格数据
-      fill("/alarm/all");
+      if (window.location.search == "") {
+        fill("/rule/all");
+      }
+      else {
+        var cid = parseSearch()["configId"];
+        $("#configId").val(cid);
+        fill("/config/" + cid + "/rule");
+      }
 
       //新增
       $("#save").click(function(){
-//          window.location.href = getContextPath()+"/config/rpc_add.html";
+          window.location.href = getContextPath()+"/config/rule_setting.html?configId=" + $("#configId").val();
       });
 
       //删除
-      $("#config-table").on("click", ".deleteOne", function () {
-//          var id = $(this).closest("tr").children().eq(1).html();
-//          $('#my-confirm').modal({
-//             relatedTarget: this,
-//             onConfirm: function (options) {
-//                 $.ajax({
-//                    cache: true,
-//                    type: "POST",
-//                    url: getContextPath() + "/config/rpc/d",
-//                    data: {"id": id},
-//                    async: true,
-//                    error: function (request) {
-//                        alert("Connection error");
-//                    },
-//                    success: function (data) {
-//                        window.location.href = getContextPath() + "/config/rpc_list.html";
-//                    }
-//                })
-//             },
-//             onCancel: function () {
-//             }
-//          });
+      $("#rule-table").on("click", ".deleteOne", function () {
+          var id = $(this).closest("tr").children().eq(1).html();
+          $('#my-confirm').modal({
+             relatedTarget: this,
+             onConfirm: function (options) {
+                 $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: getContextPath() + "/rule/d",
+                    data: {"id": id},
+                    async: true,
+                    error: function (request) {
+                        alert("Connection error");
+                    },
+                    success: function (data) {
+                        window.location.href = getContextPath() + "/config/rule_list.html";
+                    }
+                })
+             },
+             onCancel: function () {
+             }
+          });
       });
 
       //搜索
@@ -223,6 +228,12 @@
         fill("/config/rpc/condition", param);
       });
 
+      //编辑
+      $("#rule-table").on("click", ".editOne", function () {
+        var id = $(this).closest("tr").children().eq(1).html();
+        window.location.href = getContextPath()+"/config/rule_setting.html?id="+id;
+      });
+
       function fill(url, inData) {
           $.getJSON( getContextPath() + url, inData, function( data ) {
               // tr0 ng-show
@@ -231,11 +242,13 @@
               else
                   $(".tr_config0").show();
 
+              console.log(JSON.stringify(data));
+
               //1. create tr td for data
               for(var i=0; i<data.length-1; i++){
                   var $node = $(".tr_config"+i).clone();
                   $node.removeClass().addClass("tr_config"+(i+1));
-                  $node.appendTo($("#config-table"));
+                  $node.appendTo($("#rule-table"));
               }
               //2. fill td data
               var options = {
