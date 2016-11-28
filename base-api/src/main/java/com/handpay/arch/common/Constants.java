@@ -17,4 +17,6 @@ public class Constants {
     public static final double KPI_PRECISION = 0.00001d;
 
     public static final FastDateFormat FAST_SDF = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
+
+    public static final String EMAIL_HOST = "mail.99wuxian.com";
 }

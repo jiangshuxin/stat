@@ -9,4 +9,6 @@ import com.handpay.arch.stat.bean.StatBean;
 public interface AlarmWorker {
     @SuppressWarnings("rawtypes")
 	void checkKpi(StatBean statBean, CommonResult result);
+
+    void sendAlarm();
 }

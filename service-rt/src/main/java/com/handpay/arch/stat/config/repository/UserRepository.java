@@ -14,6 +14,6 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     /*
     * @Entity(name="xxx"), xxx为@Query注解中的表
     * */
-    @Query("select u from #{#entityName} u, ref_rule_user r where u.userId = r.userId and r.ruleId=?1")
+    @Query("select u from user u, ref_rule_user r where u.userId = r.userId and r.ruleId=?1")
     List<UserEntity> findByRuleId(int id);
 }

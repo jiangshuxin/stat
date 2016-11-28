@@ -11,7 +11,7 @@ import java.util.List;
  * Created by fczheng on 2016/11/15.
  */
 public interface RefRuleUserRepository  extends JpaRepository<RefRuleUser, RefRuleUser> {
-    @Query("select u.userId from #{#entityName} u where u.ruleId = ?1")
+    @Query("select u.userId from ref_rule_user u where u.ruleId = ?1")
     List<String> findByRuleId(int ruleId);
 
     void deleteByRuleId(int ruleId);
