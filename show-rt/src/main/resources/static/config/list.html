@@ -12,8 +12,8 @@
   <link rel="icon" type="image/png" href="../amaze/assets/i/favicon.png">
   <link rel="apple-touch-icon-precomposed" href="../amaze/assets/i/app-icon72x72@2x.png">
   <meta name="apple-mobile-web-app-title" content="Amaze UI" />
-  <link rel="stylesheet" href="../amaze/assets/css/amazeui.min.css"/>
   <link rel="stylesheet" href="../amaze/assets/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="../amaze/assets/css/amazeui.min.css"/>
   <link rel="stylesheet" href="../amaze/assets/css/admin.css">
 </head>
 <body>
@@ -169,9 +169,9 @@
 <a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
 
 <script src="../amaze/assets/js/jquery.min.js"></script>
-<script src="../amaze/assets/js/amazeui.min.js"></script>
 <script src="../amaze/assets/js/bootstrap.min.js"></script>
 <script src="../amaze/assets/js/jquery.twbsPagination.min.js"></script>
+<script src="../amaze/assets/js/amazeui.min.js"></script>
 <script src="../amaze/assets/js/app.js"></script>
 <script src="../amaze/assets/js/plugins.js"></script>
 <script>
@@ -242,6 +242,7 @@
       //删除
       $("#config-table").on("click", ".deleteOne", function () {
         var id = $(this).closest("tr").children().eq(1).html();
+        console.log("id------------->>" + id);
         $('#my-confirm').modal({
              relatedTarget: this,
              onConfirm: function (options) {

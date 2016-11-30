@@ -88,7 +88,7 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
         Page<ConfigInfo> infoPage = entityPage.map(configConverter);
 
         //2.转页面数据(dubbo使用原生pagable异常)
-        Page<ConfigInfo> result = new PageableImpl<ConfigInfo>(infoPage.getContent(), pageable, infoPage.getTotalElements());
+        Page<ConfigInfo> result = (Page)(new PageableImpl<ConfigInfo>(infoPage.getContent(), pageable, infoPage.getTotalElements()));
         return result;
     }
 
