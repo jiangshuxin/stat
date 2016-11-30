@@ -4,6 +4,7 @@ package com.handpay.arch.stat.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,9 +26,9 @@ public class ConfigCenterController {
     @Autowired
     private ConfigCenterService configCenterService;
 
-    @GetMapping("/config/all")
-    public List<?> findAll() {
-        List<?> all = configCenterService.findAll();
+    @GetMapping("/config/all/{page}")
+    public Page<?> findAll(@PathVariable(name = "page") int page) {
+        Page<?> all = configCenterService.findAll(page);
         return all;
     }
 

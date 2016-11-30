@@ -13,6 +13,7 @@
   <link rel="apple-touch-icon-precomposed" href="../amaze/assets/i/app-icon72x72@2x.png">
   <meta name="apple-mobile-web-app-title" content="Amaze UI" />
   <link rel="stylesheet" href="../amaze/assets/css/amazeui.min.css"/>
+  <link rel="stylesheet" href="../amaze/assets/css/bootstrap.min.css"/>
   <link rel="stylesheet" href="../amaze/assets/css/admin.css">
 </head>
 <body>
@@ -132,16 +133,11 @@
               </tr>
             </table>
             <div class="am-cf">
-              共 15 条记录
-              <div class="am-fr">
-                <ul class="am-pagination">
-                  <li class="am-disabled"><a href="#">«</a></li>
-                  <li class="am-active"><a href="#">1</a></li>
-                  <li><a href="#">2</a></li>
-                  <li><a href="#">3</a></li>
-                  <li><a href="#">4</a></li>
-                  <li><a href="#">5</a></li>
-                </ul>
+              <div style="float: right;" id="pageDiv">
+                <ul id="pagination-config" class="pagination-sm"></ul>
+              </div>
+              <div style="float: right;" id="totalDiv">
+                <p id="totalText">共 <span id="total"></span> 条记录&nbsp;&nbsp;&nbsp;&nbsp;</p>
               </div>
             </div>
         </div>
@@ -174,32 +170,69 @@
 
 <script src="../amaze/assets/js/jquery.min.js"></script>
 <script src="../amaze/assets/js/amazeui.min.js"></script>
+<script src="../amaze/assets/js/bootstrap.min.js"></script>
+<script src="../amaze/assets/js/jquery.twbsPagination.min.js"></script>
 <script src="../amaze/assets/js/app.js"></script>
 <script src="../amaze/assets/js/plugins.js"></script>
 <script>
   $(function(){
+
       //初始化表格数据
-      $.getJSON( getContextPath()+"/config/all", function( data ) {
+      getPageData(1);
+
+      function getPageData(page) {
+        var reqPage = page - 1;  //后台从第0页开始
+        $.getJSON( getContextPath()+"/config/all/" + reqPage, function( data ) {
+          $("tr[class^='tr_config']").each(function () {
+            if ($(this).attr("class") != 'tr_config0') {
+              $(this).remove();
+            }
+          });
+
           //1. create tr td for data
-          for(var i=0; i<data.length-1; i++){
-              var $node = $(".tr_config"+i).clone();
-              $node.removeClass().addClass("tr_config"+(i+1));
-              $node.appendTo($("#config-table"));
+          for(var i=0; i<data.content.length-1; i++){
+            var $node = $(".tr_config"+i).clone();
+            $node.removeClass().addClass("tr_config"+(i+1));
+            $node.appendTo($("#config-table"));
           }
           //2. fill td data
           var options = {
-              findby : "class",
-              restrict : true
+            findby : "class",
+            restrict : true
           }
-          $.each(data, function( index, value ) {
-              $(".tr_config"+index).fillTable( value, options );
+
+          $.each(data.content, function( index, value ) {
+            $(".tr_config"+index).fillTable( value, options );
           });
 
-          if (data.length == 0)
+          $("#total").text(data.totalElements);
+          if (data.number == 0) {
+            initPage(data.totalPages);
+          }
+
+          if (data.content.length == 0)
             $(".tr_config0").hide();
           else
             $(".tr_config0").show();
-      });
+        });
+      }
+
+      function initPage(totalPages) {
+        var visiblePages = 5;
+        if (totalPages <= 5) {
+          visiblePages = totalPages;
+        }
+        $('#pagination-config').twbsPagination({
+           totalPages: totalPages,
+           visiblePages: visiblePages,
+           initiateStartPageClick: false,
+           onPageClick: function (event, page) {
+             getPageData(page);
+           }
+         });
+        $("#totalDiv").height($("#pageDiv").height());
+        $("#totalText").css({"paddingTop": $("#pageDiv").height() / 3});
+      }
 
       //新增
       $("#save").click(function(){

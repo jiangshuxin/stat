@@ -1,24 +1,8 @@
 package com.handpay.arch.stat.config.service.impl;
 
 
-import static com.handpay.arch.common.Constants.FAST_SDF;
-import static com.handpay.arch.common.Constants.KPI_PRECISION;
-import static com.handpay.arch.common.Constants.SEPARATOR_COMMA;
-
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.google.common.collect.Lists;
+
 import com.handpay.arch.stat.bean.StatBean;
 import com.handpay.arch.stat.bean.alarm.AlarmRuleInfo;
 import com.handpay.arch.stat.bean.alarm.ConfigInfo;
@@ -26,6 +10,8 @@ import com.handpay.arch.stat.bean.alarm.GroupSelect;
 import com.handpay.arch.stat.bean.alarm.RPCConfig;
 import com.handpay.arch.stat.bean.alarm.RuleInitInfo;
 import com.handpay.arch.stat.bean.alarm.Select;
+import com.handpay.arch.stat.bean.page.PageableImpl;
+import com.handpay.arch.stat.bean.page.PageableRequest;
 import com.handpay.arch.stat.config.model.entity.AlarmRuleEntity;
 import com.handpay.arch.stat.config.model.entity.ConfigEntity;
 import com.handpay.arch.stat.config.model.entity.RPCConfigEntity;
@@ -40,11 +26,41 @@ import com.handpay.arch.stat.manager.StreamManager;
 import com.handpay.arch.stat.provider.ConfigCenterService;
 import com.handpay.arch.stat.provider.StreamProvider;
 
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.List;
+
+import static com.handpay.arch.common.Constants.FAST_SDF;
+import static com.handpay.arch.common.Constants.KPI_PRECISION;
+import static com.handpay.arch.common.Constants.SEPARATOR_COMMA;
+
 /**
  * Created by fczheng on 2016/10/31.
  */
 @Service("configCenterService")
 public class ConfigCenterServiceImpl implements ConfigCenterService {
+
+    private static final Converter<ConfigEntity, ConfigInfo> configConverter = new Converter<ConfigEntity, ConfigInfo>(){
+        @Override
+        public ConfigInfo convert(ConfigEntity source) {
+            ConfigInfo info = new ConfigInfo();
+            BeanUtils.copyProperties(source, info);
+            info.setMaintainDate(String.valueOf(source.getMaintainDate()));
+            return info;
+        }
+    };
 
     @Autowired
     private ConfigEntityRepository configInfoRepo;
@@ -63,16 +79,17 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
     private StreamProvider streamProvider;
 
     @Override
-    public List<ConfigInfo> findAll() {
-        List<ConfigEntity> entityList = configInfoRepo.findAll();
-        List<ConfigInfo> infoList = Lists.newArrayList();
-        for (ConfigEntity entity: entityList) {
-            ConfigInfo info = new ConfigInfo();
-            BeanUtils.copyProperties(entity, info);
-            info.setMaintainDate(String.valueOf(entity.getMaintainDate()));
-            infoList.add(info);
-        }
-        return infoList;
+    public Page<ConfigInfo> findAll(int page) {
+        PageableRequest pageable = new PageableRequest(page);  //页面
+
+        //1.数据层
+        PageRequest pageRequest = new PageRequest(page, pageable.getPageSize());
+        Page<ConfigEntity> entityPage = configInfoRepo.findAll(pageRequest);
+        Page<ConfigInfo> infoPage = entityPage.map(configConverter);
+
+        //2.转页面数据(dubbo使用原生pagable异常)
+        Page<ConfigInfo> result = new PageableImpl<ConfigInfo>(infoPage.getContent(), pageable, infoPage.getTotalElements());
+        return result;
     }
 
     @Override

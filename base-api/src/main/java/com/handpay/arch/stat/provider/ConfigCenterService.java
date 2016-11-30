@@ -1,20 +1,22 @@
 package com.handpay.arch.stat.provider;
 
 
-import java.util.List;
-
 import com.handpay.arch.stat.bean.alarm.AlarmRuleInfo;
 import com.handpay.arch.stat.bean.alarm.ConfigInfo;
 import com.handpay.arch.stat.bean.alarm.RPCConfig;
 import com.handpay.arch.stat.bean.alarm.RuleInitInfo;
 import com.handpay.arch.stat.bean.alarm.Select;
 
+import org.springframework.data.domain.Page;
+
+import java.util.List;
+
 /**
  * Created by fczheng on 2016/10/31.
  */
 public interface ConfigCenterService {
     /*****************配置中心*******************/
-    List<ConfigInfo> findAll();
+    Page<ConfigInfo> findAll(int page);
 
     ConfigInfo save(ConfigInfo configInfo);
 
